@@ -1,6 +1,8 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include "settings.hpp"
+#include "game.hpp"
+#include "render.hpp"
 
 int main()
 {
@@ -33,8 +35,6 @@ int main()
     bool running = true;
     SDL_Event event;
 
-    SDL_Rect rect = {200, 150, globalSettings.cell_size, globalSettings.cell_size};
-
     while (running)
     {
         while (SDL_PollEvent(&event))
@@ -49,30 +49,15 @@ int main()
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
-        // SQUARE
-        int thickness = 2;
-        // Fill colour
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        SDL_RenderFillRect(renderer, &rect);
-        // Top side (white)
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White
-        SDL_Rect top = {rect.x, rect.y, rect.w, thickness};
-        SDL_RenderFillRect(renderer, &top);
+        //draw_cell(renderer, 200, 150);
+        
+        std::vector<std::vector<Node>> mine_grid = grid();
+        for (size_t i = 0; i < mine_grid.size(); i++) {
+            for (size_t j = 0; j < mine_grid[i].size(); ++j) {
+                draw_cell(renderer, j * globalSettings.cell_size, i * globalSettings.cell_size);
 
-        // Bottom side (grey)
-        SDL_SetRenderDrawColor(renderer, 123, 123, 123, 255); // Grey
-        SDL_Rect bottom = {rect.x, rect.y + rect.h - thickness, rect.w, thickness};
-        SDL_RenderFillRect(renderer, &bottom);
-
-        // Left side (white)
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White
-        SDL_Rect left = {rect.x, rect.y, thickness, rect.h};
-        SDL_RenderFillRect(renderer, &left);
-
-        // Right side (grey)
-        SDL_SetRenderDrawColor(renderer, 123, 123, 123, 255); // Grey
-        SDL_Rect right = {rect.x + rect.w - thickness, rect.y, thickness, rect.h};
-        SDL_RenderFillRect(renderer, &right);
+            }
+        }
 
         SDL_RenderPresent(renderer);
     }

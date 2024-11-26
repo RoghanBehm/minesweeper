@@ -1,6 +1,6 @@
 #include <vector>
 #include <iostream>
-#include "game.h"
+#include "game.hpp"
 
 Node node {
     .hasMine = false,
@@ -9,9 +9,10 @@ Node node {
     .adjacentMines = 0
 };
 
-void grid() {
+std::vector<std::vector<Node>> grid() {
     int rows = 5;
     int cols = 5;
     std::vector<std::vector<Node>> grid(rows, std::vector<Node>(cols));
+    return grid;
 }
 

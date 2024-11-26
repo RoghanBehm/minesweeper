@@ -1,3 +1,5 @@
+#include <vector>
+
 struct Node {
     bool hasMine;
     bool isRevealed;
@@ -5,4 +7,4 @@ struct Node {
     int adjacentMines;
 };
 
-Node node;
+std::vector<std::vector<Node>> grid();
