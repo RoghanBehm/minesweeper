@@ -8,3 +8,4 @@ struct Node {
 };
 
 std::vector<std::vector<Node>> grid();
+bool cellClicked (int x, int y, int cell_x, int cell_y);

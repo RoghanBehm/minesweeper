@@ -34,36 +34,46 @@ int main()
 
     bool running = true;
     SDL_Event event;
+    int mouseX = 0, mouseY = 0;
 
+    bool cellIsClicked = false;
+    std::vector<std::vector<Node>> mine_grid = grid();
     while (running)
     {
         while (SDL_PollEvent(&event))
         {
             if (event.type == SDL_QUIT)
-            {
+            {   
+
                 running = false;
             }
-        }
-
-        // Background (black)
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
-
-        //draw_cell(renderer, 200, 150);
-        
-        std::vector<std::vector<Node>> mine_grid = grid();
-        for (size_t i = 0; i < mine_grid.size(); i++) {
-            for (size_t j = 0; j < mine_grid[i].size(); ++j) {
-                draw_cell(renderer, j * globalSettings.cell_size, i * globalSettings.cell_size);
-
+            else if (event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                SDL_GetMouseState(&mouseX, &mouseY);
             }
+
+            // Background (black)
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+            SDL_RenderClear(renderer);
+
+            
+            for (size_t i = 0; i < mine_grid.size(); i++)
+            {
+                for (size_t j = 0; j < mine_grid[i].size(); ++j)
+                {
+                    int cell_x = j * globalSettings.cell_size;
+                    int cell_y = i * globalSettings.cell_size;
+                    cellIsClicked = cellClicked(mouseX, mouseY, cell_x, cell_y);
+                    draw_cell(renderer, cell_x, cell_y, cellIsClicked);
+                }
+            }
+
+            SDL_RenderPresent(renderer);
         }
-
-        SDL_RenderPresent(renderer);
     }
-
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
-    return 0;
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return 0;
+    
 }

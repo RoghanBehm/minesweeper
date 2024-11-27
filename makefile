@@ -3,7 +3,7 @@ CXX = g++
 CXXFLAGS = -Wall -Wextra -std=c++17 -g -I./include -I/usr/include/SDL2 -D_REENTRANT
 LDFLAGS = -L/usr/lib/x86_64-linux-gnu -lSDL2
 
-# Targets
+# Directories and files
 TARGET = bin/minesweeper
 SRC_DIR = src
 OBJ_DIR = obj
@@ -24,6 +24,10 @@ $(OBJ_DIR):
 
 $(BIN_DIR):
 	mkdir -p $(BIN_DIR)
+
+# GDB target
+gdb: $(TARGET)
+	gdb $(TARGET)
 
 # Clean up
 clean:
