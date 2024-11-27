@@ -10,8 +10,8 @@ Node node {
 };
 
 std::vector<std::vector<Node>> grid() {
-    int rows = 5;
-    int cols = 5;
+    int rows = 16;
+    int cols = 30;
     std::vector<std::vector<Node>> grid(rows, std::vector<Node>(cols));
     return grid;
 }
