@@ -38,8 +38,13 @@ int main()
 
     bool cellIsClicked = false;
     std::vector<std::vector<Node>> mine_grid = grid();
+
+    const int frameDelay = 1000 / 60;
+    Uint32 frameStart = SDL_GetTicks();
+
     while (running)
     {
+        
         while (SDL_PollEvent(&event))
         {
             if (event.type == SDL_QUIT)
@@ -51,11 +56,15 @@ int main()
             {
                 SDL_GetMouseState(&mouseX, &mouseY);
             }
+        }
 
             // Background (black)
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
             SDL_RenderClear(renderer);
 
+
+            //TODO:
+            // Draw the grid once outside of the game loop, only render changes in the game loop
             
             for (size_t i = 0; i < mine_grid.size(); i++)
             {
@@ -69,7 +78,10 @@ int main()
             }
 
             SDL_RenderPresent(renderer);
-        }
+            Uint32 frameTime = SDL_GetTicks() - frameStart;
+            if (frameDelay > frameTime) {
+                SDL_Delay(frameDelay - frameTime);
+            }
     }
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
