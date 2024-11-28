@@ -73,7 +73,8 @@ int main()
                     int cell_x = j * globalSettings.cell_size;
                     int cell_y = i * globalSettings.cell_size;
                     cellIsClicked = cellClicked(mouseX, mouseY, cell_x, cell_y);
-                    draw_cell(renderer, cell_x, cell_y, cellIsClicked);
+                    Node &currentCell = mine_grid[i][j];
+                    draw_cell(renderer, cell_x, cell_y, cellIsClicked, currentCell);
                 }
             }
 

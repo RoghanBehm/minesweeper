@@ -1,3 +1,4 @@
+#pragma once
 struct Settings {
     int cell_size;
 };

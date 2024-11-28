@@ -1,4 +1,5 @@
 #include <vector>
+#pragma once
 
 struct Node {
     bool hasMine;
