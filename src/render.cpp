@@ -10,7 +10,7 @@ void draw_cell(SDL_Renderer *renderer, int x, int y, bool clicked, Node& cell)
     if (clicked | cell.isRevealed)
     {
         SDL_Rect rect = {x, y, globalSettings.cell_size, globalSettings.cell_size};
-        cell.isRevealed = true;
+        
         // Fill colour
         SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
         SDL_RenderFillRect(renderer, &rect);

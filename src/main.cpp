@@ -35,7 +35,7 @@ int main()
     bool running = true;
     SDL_Event event;
     int mouseX = 0, mouseY = 0;
-
+    bool mouseDown = false;
     bool cellIsClicked = false;
     std::vector<std::vector<Node>> mine_grid = grid();
 
@@ -54,6 +54,10 @@ int main()
             }
             else if (event.type == SDL_MOUSEBUTTONDOWN)
             {
+                SDL_GetMouseState(&mouseX, &mouseY);
+                mouseDown = true;
+            } 
+            else if (event.type == SDL_MOUSEMOTION && mouseDown) {
                 SDL_GetMouseState(&mouseX, &mouseY);
             }
         }
