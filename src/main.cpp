@@ -34,9 +34,17 @@ int main()
 
     bool running = true;
     SDL_Event event;
-    int mouseX = 0, mouseY = 0;
-    bool mouseDown = false;
-    bool cellIsClicked = false;
+
+    struct {
+        int mouseX = 0;
+        int mouseY = 0;
+        int mouseXr = 0;
+        int mouseYr = 0;
+        bool mouseDown = false;
+        bool cellIsClicked = false;
+        bool released = false;
+    } mouseProps;
+
     std::vector<std::vector<Node>> mine_grid = grid();
 
     const int frameDelay = 1000 / 60;
@@ -54,11 +62,15 @@ int main()
             }
             else if (event.type == SDL_MOUSEBUTTONDOWN)
             {
-                SDL_GetMouseState(&mouseX, &mouseY);
-                mouseDown = true;
-            } 
-            else if (event.type == SDL_MOUSEMOTION && mouseDown) {
-                SDL_GetMouseState(&mouseX, &mouseY);
+                SDL_GetMouseState(&mouseProps.mouseX, &mouseProps.mouseY);
+                mouseProps.mouseDown = true;
+            } else if (event.type == SDL_MOUSEBUTTONUP) {
+                SDL_GetMouseState(&mouseProps.mouseXr, &mouseProps.mouseYr);
+                mouseProps.mouseDown = false;
+                mouseProps.released = true;
+            }
+            else if (event.type == SDL_MOUSEMOTION && mouseProps.mouseDown) {
+                SDL_GetMouseState(&mouseProps.mouseX, &mouseProps.mouseY);
             }
         }
 
@@ -66,21 +78,19 @@ int main()
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
             SDL_RenderClear(renderer);
 
-
-            //TODO:
-            // Draw the grid once outside of the game loop, only render changes in the game loop
-            
-            for (size_t i = 0; i < mine_grid.size(); i++)
+          for (size_t i = 0; i < mine_grid.size(); i++)
             {
                 for (size_t j = 0; j < mine_grid[i].size(); ++j)
                 {
                     int cell_x = j * globalSettings.cell_size;
                     int cell_y = i * globalSettings.cell_size;
-                    cellIsClicked = cellClicked(mouseX, mouseY, cell_x, cell_y);
+                    mouseProps.cellIsClicked = cellClicked(mouseProps.mouseX, mouseProps.mouseY, cell_x, cell_y);
                     Node &currentCell = mine_grid[i][j];
-                    draw_cell(renderer, cell_x, cell_y, cellIsClicked, currentCell);
+                    mouseProps.released = cellClicked(mouseProps.mouseXr, mouseProps.mouseYr, cell_x, cell_y);
+                    draw_cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell);
                 }
             }
+
 
             SDL_RenderPresent(renderer);
             Uint32 frameTime = SDL_GetTicks() - frameStart;

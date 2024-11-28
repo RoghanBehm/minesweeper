@@ -4,10 +4,20 @@
 #include "settings.hpp"
 #include "game.hpp"
 
-void draw_cell(SDL_Renderer *renderer, int x, int y, bool clicked, Node& cell)
+void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node& cell)
 {
 
-    if (clicked | cell.isRevealed)
+    if ((clicked & released) | cell.isRevealed) {
+        SDL_Rect rect = {x, y, globalSettings.cell_size, globalSettings.cell_size};
+        
+        // Fill colour
+        SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
+        SDL_RenderFillRect(renderer, &rect);
+        cell.isRevealed = true;
+        released = false;
+        return;
+    }
+     else if (clicked)
     {
         SDL_Rect rect = {x, y, globalSettings.cell_size, globalSettings.cell_size};
         
@@ -15,7 +25,7 @@ void draw_cell(SDL_Renderer *renderer, int x, int y, bool clicked, Node& cell)
         SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
         SDL_RenderFillRect(renderer, &rect);
         return;
-    }
+    } 
     SDL_Rect rect = {x, y, globalSettings.cell_size, globalSettings.cell_size};
 
     // Fill colour
