@@ -1,20 +1,30 @@
 #include <iostream>
 #include <SDL2/SDL.h>
+#include <SDL_image.h>
 #include "render.hpp"
 #include "settings.hpp"
 #include "game.hpp"
 
-void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node& cell)
+void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node& cell,  SDL_Texture *mine)
 {
 
     if ((clicked & released) | cell.isRevealed) {
+
+        cell.isRevealed = true;
+        released = false;
         SDL_Rect rect = {x, y, globalSettings.cell_size, globalSettings.cell_size};
         
+        if (cell.hasMine) {
+            SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
+            SDL_RenderCopy(renderer, mine, NULL, &rect);
+            return;
+        }
         // Fill colour
         SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
         SDL_RenderFillRect(renderer, &rect);
-        cell.isRevealed = true;
-        released = false;
+        SDL_SetRenderDrawColor(renderer, 123, 123, 123, 255);
+        SDL_RenderDrawRect(renderer, &rect);
+        
         return;
     }
      else if (clicked)

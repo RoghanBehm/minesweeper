@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SDL2/SDL.h>
+#include <SDL_image.h>
 #include "settings.hpp"
 #include "game.hpp"
 #include "render.hpp"
@@ -32,6 +33,12 @@ int main()
         return 1;
     }
 
+     SDL_Texture *mine = IMG_LoadTexture(renderer, "assets/Mine.png");
+    if (!mine) {
+        printf("Failed to load apple texture: %s\n", SDL_GetError());
+        return 1;
+    }
+
     bool running = true;
     SDL_Event event;
 
@@ -49,6 +56,7 @@ int main()
 
     const int frameDelay = 1000 / 60;
     Uint32 frameStart = SDL_GetTicks();
+    plantMines(mine_grid, 200);
 
     while (running)
     {
@@ -57,7 +65,6 @@ int main()
         {
             if (event.type == SDL_QUIT)
             {   
-
                 running = false;
             }
             else if (event.type == SDL_MOUSEBUTTONDOWN)
@@ -73,7 +80,7 @@ int main()
                 SDL_GetMouseState(&mouseProps.mouseX, &mouseProps.mouseY);
             }
         }
-
+            
             // Background (black)
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
             SDL_RenderClear(renderer);
@@ -87,7 +94,7 @@ int main()
                     mouseProps.cellIsClicked = cellClicked(mouseProps.mouseX, mouseProps.mouseY, cell_x, cell_y);
                     Node &currentCell = mine_grid[i][j];
                     mouseProps.released = cellClicked(mouseProps.mouseXr, mouseProps.mouseYr, cell_x, cell_y);
-                    draw_cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell);
+                    draw_cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell, mine);
                 }
             }
 
