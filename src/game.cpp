@@ -49,28 +49,26 @@ int checkSurrounding(std::vector<std::vector<Node>> &grid, int row, int col) {
     int rows = grid.size();
     int cols = grid[0].size();
 
-    if (col + 1 < cols && grid[row][col + 1].hasMine) {
-        mines++;
-    }
-    if (col - 1 >= 0 && grid[row][col - 1].hasMine) {
-        mines++;
-    }
-    if (row - 1 >= 0 && grid[row - 1][col].hasMine) {
-        mines++;
-    }
-    if (row - 1 >= 0 && col + 1 < cols && grid[row - 1][col + 1].hasMine) {
-        mines++;
-    }
-    if (row - 1 >= 0 && col - 1 >= 0 && grid[row - 1][col - 1].hasMine) {
-    }
-    if (row + 1 < rows && grid[row + 1][col].hasMine) {
-        mines++;
-    }
-    if (row + 1 < rows && col + 1 < cols && grid[row + 1][col + 1].hasMine) {
-        mines++;
-    }
-    if (row + 1 < rows && col - 1 >= 0 && grid[row + 1][col - 1].hasMine) {
-        mines++;
+ const int directions[8][2] = {
+        {-1, 0},    // Up
+        {1, 0},     // Down
+        {0, -1},    // Left
+        {0, 1},     // Right
+        {-1, -1},   // Up-Left
+        {-1, 1},    // Up-Right
+        {1, -1},    // Down-Left
+        {1, 1}      // Down-Right
+    };
+
+    for (const auto &dir : directions) {
+        int newRow = row + dir[0];
+        int newCol = col + dir[1];
+
+        if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) {
+            if (grid[newRow][newCol].hasMine) {
+                mines++;
+            }
+        }
     }
     return mines;
 }
