@@ -94,7 +94,9 @@ int main()
                     mouseProps.cellIsClicked = cellClicked(mouseProps.mouseX, mouseProps.mouseY, cell_x, cell_y);
                     Node &currentCell = mine_grid[i][j];
                     mouseProps.released = cellClicked(mouseProps.mouseXr, mouseProps.mouseYr, cell_x, cell_y);
-                    draw_cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell, mine);
+                    int surroundingMines = checkSurrounding(mine_grid, i, j);
+                    draw_cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell, mine, surroundingMines);
+                    
                 }
             }
 

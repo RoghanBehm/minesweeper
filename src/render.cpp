@@ -5,7 +5,7 @@
 #include "settings.hpp"
 #include "game.hpp"
 
-void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node& cell,  SDL_Texture *mine)
+void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node& cell,  SDL_Texture *mine, int nearbyMines)
 {
 
     if ((clicked & released) | cell.isRevealed) {
@@ -24,6 +24,7 @@ void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &releas
         SDL_RenderFillRect(renderer, &rect);
         SDL_SetRenderDrawColor(renderer, 123, 123, 123, 255);
         SDL_RenderDrawRect(renderer, &rect);
+        std::cout << nearbyMines << std::endl;
         
         return;
     }

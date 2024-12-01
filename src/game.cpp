@@ -36,12 +36,41 @@ void plantMines(std::vector<std::vector<Node>> &grid, int numMines) {
         int randomCol = std::rand() % cols;
         if (!grid[randomRow][randomCol].hasMine) {
             grid[randomRow][randomCol].hasMine = true;
-            
-            std::cout << "Has mine " << grid[randomRow][randomCol].hasMine << "\n";
 
             placedMines++;
         }
         
     } 
 
+}
+
+int checkSurrounding(std::vector<std::vector<Node>> &grid, int row, int col) {
+    int mines = 0;
+    int rows = grid.size();
+    int cols = grid[0].size();
+
+    if (col + 1 < cols && grid[row][col + 1].hasMine) {
+        mines++;
+    }
+    if (col - 1 >= 0 && grid[row][col - 1].hasMine) {
+        mines++;
+    }
+    if (row - 1 >= 0 && grid[row - 1][col].hasMine) {
+        mines++;
+    }
+    if (row - 1 >= 0 && col + 1 < cols && grid[row - 1][col + 1].hasMine) {
+        mines++;
+    }
+    if (row - 1 >= 0 && col - 1 >= 0 && grid[row - 1][col - 1].hasMine) {
+    }
+    if (row + 1 < rows && grid[row + 1][col].hasMine) {
+        mines++;
+    }
+    if (row + 1 < rows && col + 1 < cols && grid[row + 1][col + 1].hasMine) {
+        mines++;
+    }
+    if (row + 1 < rows && col - 1 >= 0 && grid[row + 1][col - 1].hasMine) {
+        mines++;
+    }
+    return mines;
 }

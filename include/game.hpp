@@ -1,6 +1,9 @@
 #pragma once
 #include <vector>
 
+
+
+
 struct Node {
     bool hasMine;
     bool isRevealed;
@@ -11,3 +14,4 @@ struct Node {
 std::vector<std::vector<Node>> grid();
 bool cellClicked (int x, int y, int cell_x, int cell_y);
 void plantMines(std::vector<std::vector<Node>> &grid, int numMines);
+int checkSurrounding(std::vector<std::vector<Node>> &grid, int row, int col);
