@@ -5,19 +5,19 @@
 #include "settings.hpp"
 #include "game.hpp"
 
-void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node& cell,  SDL_Texture *mine, SDL_Texture *flag, int nearbyMines, bool &rightClick)
+void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node& cell, GameAssets &assets, int nearbyMines, bool &rightClick)
 {
-    if ((rightClick) | cell.isFlagged) {
+    if ((rightClick) || cell.isFlagged) {
         rightClick = false;
         cell.isFlagged = true;
         SDL_Rect rect = {x, y, globalSettings.cell_size, globalSettings.cell_size};
         SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
-        SDL_RenderCopy(renderer, flag, NULL, &rect);
+        SDL_RenderCopy(renderer, assets.flag, NULL, &rect);
         return;
 
     }
 
-    else if ((clicked & released) | cell.isRevealed) {
+    else if ((clicked & released) || cell.isRevealed) {
 
         cell.isRevealed = true;
         released = false;
@@ -25,14 +25,52 @@ void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &releas
         
         if (cell.hasMine) {
             SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
-            SDL_RenderCopy(renderer, mine, NULL, &rect);
+            SDL_RenderCopy(renderer, assets.mine, NULL, &rect);
             return;
         }
+
+        switch(nearbyMines) {
+            case 1:
+                SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
+                SDL_RenderCopy(renderer, assets.prox1, NULL, &rect);
+                break;
+            case 2:
+                SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
+                SDL_RenderCopy(renderer, assets.prox2, NULL, &rect);
+                break;
+            case 3:
+                SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
+                SDL_RenderCopy(renderer, assets.prox3, NULL, &rect);
+                break;
+            case 4:
+                SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
+                SDL_RenderCopy(renderer, assets.prox4, NULL, &rect);
+                break;
+            case 5:
+                SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
+                SDL_RenderCopy(renderer, assets.prox5, NULL, &rect);
+                break;
+            case 6:
+                SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
+                SDL_RenderCopy(renderer, assets.prox6, NULL, &rect);
+                break;
+            case 7:
+                SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
+                SDL_RenderCopy(renderer, assets.prox7, NULL, &rect);
+                break;
+            case 8:
+                SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
+                SDL_RenderCopy(renderer, assets.prox8, NULL, &rect);
+                break;
+            default:
+                SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
+                SDL_RenderFillRect(renderer, &rect);
+                SDL_SetRenderDrawColor(renderer, 123, 123, 123, 255);
+                SDL_RenderDrawRect(renderer, &rect);
+                break;
+        }
         // Fill colour
-        SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
-        SDL_RenderFillRect(renderer, &rect);
-        SDL_SetRenderDrawColor(renderer, 123, 123, 123, 255);
-        SDL_RenderDrawRect(renderer, &rect);
+        
         std::cout << nearbyMines << std::endl;
         
         return;

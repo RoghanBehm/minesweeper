@@ -33,17 +33,7 @@ int main()
         return 1;
     }
 
-    SDL_Texture *mine = IMG_LoadTexture(renderer, "assets/Mine.png");
-    if (!mine) {
-        printf("Failed to load mine texture: %s\n", SDL_GetError());
-        return 1;
-    }
 
-    SDL_Texture *flag = IMG_LoadTexture(renderer, "assets/Minesweeper_flag.png");
-    if (!mine) {
-        printf("Failed to load flag texture: %s\n", SDL_GetError());
-        return 1;
-    }
 
     bool running = true;
     SDL_Event event;
@@ -66,6 +56,15 @@ int main()
     const int frameDelay = 1000 / 60;
     Uint32 frameStart = SDL_GetTicks();
     plantMines(mine_grid, 200);
+    GameAssets assets;
+
+    if (loadGameAssets(renderer, &assets) != 0) {
+        printf("Failed to load game assets.\n");
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return 1;
+    }
 
     while (running)
     {
@@ -111,7 +110,7 @@ int main()
                     Node &currentCell = mine_grid[i][j];
                     mouseProps.released = cellClicked(mouseProps.mouseXr, mouseProps.mouseYr, cell_x, cell_y);
                     int surroundingMines = checkSurrounding(mine_grid, i, j);
-                    draw_cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell, mine, flag, surroundingMines, mouseProps.rightClicked);
+                    draw_cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell, assets, surroundingMines, mouseProps.rightClicked);
                     
                 }
             }
