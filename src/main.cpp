@@ -33,9 +33,15 @@ int main()
         return 1;
     }
 
-     SDL_Texture *mine = IMG_LoadTexture(renderer, "assets/Mine.png");
+    SDL_Texture *mine = IMG_LoadTexture(renderer, "assets/Mine.png");
     if (!mine) {
-        printf("Failed to load apple texture: %s\n", SDL_GetError());
+        printf("Failed to load mine texture: %s\n", SDL_GetError());
+        return 1;
+    }
+
+    SDL_Texture *flag = IMG_LoadTexture(renderer, "assets/Minesweeper_flag.png");
+    if (!mine) {
+        printf("Failed to load flag texture: %s\n", SDL_GetError());
         return 1;
     }
 
@@ -47,9 +53,12 @@ int main()
         int mouseY = 0;
         int mouseXr = 0;
         int mouseYr = 0;
+        int mouseXc = 0;
+        int mouseYc = 0;
         bool mouseDown = false;
         bool cellIsClicked = false;
         bool released = false;
+        bool rightClicked = false;
     } mouseProps;
 
     std::vector<std::vector<Node>> mine_grid = grid();
@@ -68,9 +77,15 @@ int main()
                 running = false;
             }
             else if (event.type == SDL_MOUSEBUTTONDOWN)
-            {
-                SDL_GetMouseState(&mouseProps.mouseX, &mouseProps.mouseY);
-                mouseProps.mouseDown = true;
+            { 
+                
+                if (event.button.button == SDL_BUTTON_RIGHT) {
+                    SDL_GetMouseState(&mouseProps.mouseXc, &mouseProps.mouseYc);
+                } else {
+                    SDL_GetMouseState(&mouseProps.mouseX, &mouseProps.mouseY);
+                    mouseProps.mouseDown = true;
+                }
+                
             } else if (event.type == SDL_MOUSEBUTTONUP) {
                 SDL_GetMouseState(&mouseProps.mouseXr, &mouseProps.mouseYr);
                 mouseProps.mouseDown = false;
@@ -85,17 +100,18 @@ int main()
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
             SDL_RenderClear(renderer);
 
-          for (size_t i = 0; i < mine_grid.size(); i++)
+            for (size_t i = 0; i < mine_grid.size(); i++)
             {
                 for (size_t j = 0; j < mine_grid[i].size(); ++j)
                 {
                     int cell_x = j * globalSettings.cell_size;
                     int cell_y = i * globalSettings.cell_size;
                     mouseProps.cellIsClicked = cellClicked(mouseProps.mouseX, mouseProps.mouseY, cell_x, cell_y);
+                    mouseProps.rightClicked = cellClicked(mouseProps.mouseXc, mouseProps.mouseYc, cell_x, cell_y);
                     Node &currentCell = mine_grid[i][j];
                     mouseProps.released = cellClicked(mouseProps.mouseXr, mouseProps.mouseYr, cell_x, cell_y);
                     int surroundingMines = checkSurrounding(mine_grid, i, j);
-                    draw_cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell, mine, surroundingMines);
+                    draw_cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell, mine, flag, surroundingMines, mouseProps.rightClicked);
                     
                 }
             }

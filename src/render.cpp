@@ -5,10 +5,19 @@
 #include "settings.hpp"
 #include "game.hpp"
 
-void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node& cell,  SDL_Texture *mine, int nearbyMines)
+void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node& cell,  SDL_Texture *mine, SDL_Texture *flag, int nearbyMines, bool &rightClick)
 {
+    if ((rightClick) | cell.isFlagged) {
+        rightClick = false;
+        cell.isFlagged = true;
+        SDL_Rect rect = {x, y, globalSettings.cell_size, globalSettings.cell_size};
+        SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
+        SDL_RenderCopy(renderer, flag, NULL, &rect);
+        return;
 
-    if ((clicked & released) | cell.isRevealed) {
+    }
+
+    else if ((clicked & released) | cell.isRevealed) {
 
         cell.isRevealed = true;
         released = false;
