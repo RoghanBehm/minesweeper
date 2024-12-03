@@ -3,6 +3,7 @@
 #include <SDL_image.h>
 struct Settings {
     int cell_size;
+    bool game_over;
 };
 
 extern Settings globalSettings;

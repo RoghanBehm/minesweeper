@@ -5,11 +5,12 @@
 #include "game.hpp"
 #include "settings.hpp"
 
-Node node{
+Node node {
     .hasMine = false,
     .isRevealed = false,
     .isFlagged = false,
-    .adjacentMines = 0};
+    .adjacentMines = 0
+    };
 
 std::vector<std::vector<Node>> grid()
 {

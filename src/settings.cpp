@@ -1,7 +1,8 @@
 #include "settings.hpp"
 
 Settings globalSettings = {
-    .cell_size = 30
+    .cell_size = 30,
+    .game_over = false
 };
 
 
