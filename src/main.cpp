@@ -55,7 +55,7 @@ int main()
 
     const int frameDelay = 1000 / 60;
     Uint32 frameStart = SDL_GetTicks();
-    plantMines(mine_grid, 200);
+    plantMines(mine_grid, 50);
     GameAssets assets;
 
     if (loadGameAssets(renderer, &assets) != 0) {
@@ -111,7 +111,9 @@ int main()
                     mouseProps.released = cellClicked(mouseProps.mouseXr, mouseProps.mouseYr, cell_x, cell_y);
                     int surroundingMines = checkSurrounding(mine_grid, i, j);
                     draw_cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell, assets, surroundingMines, mouseProps.rightClicked);
-                    
+                    if (currentCell.isRevealed && !currentCell.hasMine) {
+                        revealBlanks(mine_grid, i, j);
+                    }
                 }
             }
 
