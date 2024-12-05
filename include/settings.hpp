@@ -4,6 +4,8 @@
 struct Settings {
     int cell_size;
     bool game_over;
+    bool first_click;
+    bool regenerate;
 };
 
 extern Settings globalSettings;

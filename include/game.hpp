@@ -27,3 +27,4 @@ std::array<Point, 8> returnSurrounding(std::vector<std::vector<Node>> &grid, int
 void revealBlock(std::vector<std::vector<Node>> &grid, int row, int col);
 void revealBlanks(std::vector<std::vector<Node>> &grid, int row, int col);
 void createGrid(SDL_Renderer *renderer, std::vector<std::vector<Node>> &grid, MouseProps &mouseProps, GameAssets &assets);
+void clearMines(std::vector<std::vector<Node>> &grid);

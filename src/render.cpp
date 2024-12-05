@@ -16,7 +16,7 @@ void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &releas
         SDL_RenderCopy(renderer, assets.flag, NULL, &rect);
         return;
 
-    } else if (globalSettings.game_over && cell.hasMine) {
+    } else if ((globalSettings.game_over && cell.hasMine) && !globalSettings.regenerate) {
         SDL_RenderCopy(renderer, assets.mine, NULL, &rect);
         return;
     }
@@ -26,11 +26,19 @@ void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &releas
         cell.isRevealed = true;
         released = false;
         
-        if (cell.hasMine) {
+        if (clicked && cell.hasMine && !globalSettings.regenerate) {
+            if (globalSettings.first_click) {
+                std::cout << "Regenerating grid...\n";
+                cell.hasMine = false;
+                globalSettings.regenerate = true;
+                globalSettings.first_click = false;
+                return;
+            }
             SDL_RenderCopy(renderer, assets.mine, NULL, &rect);
             globalSettings.game_over = true;
             return;
         }
+        globalSettings.first_click = false;
 
         switch(nearbyMines) {
             case 1:

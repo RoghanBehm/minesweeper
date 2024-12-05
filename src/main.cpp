@@ -8,6 +8,8 @@
 
 int main()
 {
+    std::srand(std::time(nullptr));
+
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
     {
         SDL_Log("Unable to initialise SDL: %s", SDL_GetError());
@@ -39,15 +41,12 @@ int main()
     bool running = true;
     SDL_Event event;
 
-
-
     MouseProps mouseProps;
-
     std::vector<std::vector<Node>> mine_grid = grid();
 
     const int frameDelay = 1000 / 60;
     Uint32 frameStart = SDL_GetTicks();
-    plantMines(mine_grid, 50);
+    plantMines(mine_grid, 300);
     GameAssets assets;
 
     if (loadGameAssets(renderer, &assets) != 0) {
@@ -90,8 +89,17 @@ int main()
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
             SDL_RenderClear(renderer);
 
-            createGrid(renderer, mine_grid, mouseProps, assets);
 
+            if (globalSettings.regenerate) {
+                std::cout << "Regenerating grid...\n";
+                    clearMines(mine_grid);
+                    mine_grid = grid();
+                    plantMines(mine_grid, 50);
+                    globalSettings.regenerate = false;
+                    globalSettings.first_click = true;
+            }
+
+            createGrid(renderer, mine_grid, mouseProps, assets);
 
             SDL_RenderPresent(renderer);
             Uint32 frameTime = SDL_GetTicks() - frameStart;

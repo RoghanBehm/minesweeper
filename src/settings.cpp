@@ -2,7 +2,9 @@
 
 Settings globalSettings = {
     .cell_size = 30,
-    .game_over = false
+    .game_over = false,
+    .first_click = true,
+    .regenerate = false
 };
 
 

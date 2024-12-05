@@ -27,13 +27,22 @@ bool cellClicked(int x, int y, int cell_x, int cell_y)
             y >= cell_y && y <= cell_y + globalSettings.cell_size);
 }
 
+void clearMines(std::vector<std::vector<Node>> &grid)
+{
+    for (size_t i = 0; i < grid.size(); i++) {
+        for (size_t j = 0; j < grid[i].size(); ++j) {
+            if (grid[i][j].hasMine) {
+                grid[i][j].hasMine = false;
+            }
+        }
+    }
+}
+
 void plantMines(std::vector<std::vector<Node>> &grid, int numMines)
 {
     int rows = grid.size();
     int cols = grid[0].size();
     int placedMines = 0;
-
-    std::srand(std::time(nullptr));
 
     while (placedMines < numMines)
     {
