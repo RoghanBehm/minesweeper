@@ -1,10 +1,10 @@
 #include <vector>
 #include <iostream>
 
-#include <SDL2/SDL.h>
+
 
 #include "game.hpp"
-#include "settings.hpp"
+#include "render.hpp"
 
 Node node {
     .hasMine = false,
@@ -147,3 +147,22 @@ void revealBlanks(std::vector<std::vector<Node>> &grid, int row, int col) {
     }
 }
 
+void createGrid(SDL_Renderer *renderer, std::vector<std::vector<Node>> &grid, MouseProps &mouseProps, GameAssets &assets) {
+                for (size_t i = 0; i < grid.size(); i++)
+            {
+                for (size_t j = 0; j < grid[i].size(); ++j)
+                {
+                    int cell_x = j * globalSettings.cell_size;
+                    int cell_y = i * globalSettings.cell_size;
+                    mouseProps.cellIsClicked = cellClicked(mouseProps.mouseX, mouseProps.mouseY, cell_x, cell_y);
+                    mouseProps.rightClicked = cellClicked(mouseProps.mouseXc, mouseProps.mouseYc, cell_x, cell_y);
+                    Node &currentCell = grid[i][j];
+                    mouseProps.released = cellClicked(mouseProps.mouseXr, mouseProps.mouseYr, cell_x, cell_y);
+                    int surroundingMines = checkSurrounding(grid, i, j);
+                    draw_cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell, assets, surroundingMines, mouseProps.rightClicked);
+                    if (currentCell.isRevealed && !currentCell.hasMine) {
+                        revealBlanks(grid, i, j);
+                    }
+                }
+            }
+}

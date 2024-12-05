@@ -4,6 +4,7 @@
 #include "settings.hpp"
 #include "game.hpp"
 #include "render.hpp"
+#include "mouseProps.hpp"
 
 int main()
 {
@@ -33,23 +34,14 @@ int main()
         return 1;
     }
 
-
+// Write something to regenerate board if first click is a bomb
 
     bool running = true;
     SDL_Event event;
 
-    struct {
-        int mouseX = 0;
-        int mouseY = 0;
-        int mouseXr = 0;
-        int mouseYr = 0;
-        int mouseXc = 0;
-        int mouseYc = 0;
-        bool mouseDown = false;
-        bool cellIsClicked = false;
-        bool released = false;
-        bool rightClicked = false;
-    } mouseProps;
+
+
+    MouseProps mouseProps;
 
     std::vector<std::vector<Node>> mine_grid = grid();
 
@@ -76,8 +68,7 @@ int main()
                 running = false;
             }
             else if (event.type == SDL_MOUSEBUTTONDOWN)
-            { 
-                
+            {
                 if (event.button.button == SDL_BUTTON_RIGHT) {
                     SDL_GetMouseState(&mouseProps.mouseXc, &mouseProps.mouseYc);
                 } else {
@@ -99,23 +90,7 @@ int main()
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
             SDL_RenderClear(renderer);
 
-            for (size_t i = 0; i < mine_grid.size(); i++)
-            {
-                for (size_t j = 0; j < mine_grid[i].size(); ++j)
-                {
-                    int cell_x = j * globalSettings.cell_size;
-                    int cell_y = i * globalSettings.cell_size;
-                    mouseProps.cellIsClicked = cellClicked(mouseProps.mouseX, mouseProps.mouseY, cell_x, cell_y);
-                    mouseProps.rightClicked = cellClicked(mouseProps.mouseXc, mouseProps.mouseYc, cell_x, cell_y);
-                    Node &currentCell = mine_grid[i][j];
-                    mouseProps.released = cellClicked(mouseProps.mouseXr, mouseProps.mouseYr, cell_x, cell_y);
-                    int surroundingMines = checkSurrounding(mine_grid, i, j);
-                    draw_cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell, assets, surroundingMines, mouseProps.rightClicked);
-                    if (currentCell.isRevealed && !currentCell.hasMine) {
-                        revealBlanks(mine_grid, i, j);
-                    }
-                }
-            }
+            createGrid(renderer, mine_grid, mouseProps, assets);
 
 
             SDL_RenderPresent(renderer);
