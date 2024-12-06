@@ -2,6 +2,8 @@
 
 Settings globalSettings = {
     .cell_size = 30,
+    .menu_height = 90,
+    .menu_width = 900,
     .game_over = false,
     .first_click = true,
     .regenerate = false

@@ -162,7 +162,7 @@ void createGrid(SDL_Renderer *renderer, std::vector<std::vector<Node>> &grid, Mo
                 for (size_t j = 0; j < grid[i].size(); ++j)
                 {
                     int cell_x = j * globalSettings.cell_size;
-                    int cell_y = i * globalSettings.cell_size;
+                    int cell_y = i * globalSettings.cell_size + globalSettings.menu_height;
                     mouseProps.cellIsClicked = cellClicked(mouseProps.mouseX, mouseProps.mouseY, cell_x, cell_y);
                     mouseProps.rightClicked = cellClicked(mouseProps.mouseXc, mouseProps.mouseYc, cell_x, cell_y);
                     Node &currentCell = grid[i][j];

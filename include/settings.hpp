@@ -3,6 +3,8 @@
 #include <SDL_image.h>
 struct Settings {
     int cell_size;
+    int menu_height;
+    int menu_width;
     bool game_over;
     bool first_click;
     bool regenerate;

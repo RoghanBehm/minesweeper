@@ -19,7 +19,7 @@ int main()
     SDL_Window *window = SDL_CreateWindow("Minesweeper",
                                           SDL_WINDOWPOS_CENTERED,
                                           SDL_WINDOWPOS_CENTERED,
-                                          1200, 800, SDL_WINDOW_SHOWN);
+                                          900, 800, SDL_WINDOW_SHOWN);
     if (!window)
     {
         SDL_Log("Failed to create window: %s", SDL_GetError());
@@ -36,7 +36,6 @@ int main()
         return 1;
     }
 
-// Write something to regenerate board if first click is a bomb
 
     bool running = true;
     SDL_Event event;
@@ -88,10 +87,13 @@ int main()
             // Background (black)
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
             SDL_RenderClear(renderer);
+            // Menu
+            SDL_SetRenderDrawColor(renderer, 123, 123, 123, 255);
+            SDL_Rect menu = {0, 0, globalSettings.menu_width, globalSettings.menu_height};
+            SDL_RenderFillRect(renderer, &menu);
 
 
             if (globalSettings.regenerate) {
-                std::cout << "Regenerating grid...\n";
                     clearMines(mine_grid);
                     mine_grid = grid();
                     plantMines(mine_grid, 50);

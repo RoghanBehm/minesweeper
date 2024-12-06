@@ -28,7 +28,6 @@ void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &releas
         
         if (clicked && cell.hasMine && !globalSettings.regenerate) {
             if (globalSettings.first_click) {
-                std::cout << "Regenerating grid...\n";
                 cell.hasMine = false;
                 globalSettings.regenerate = true;
                 globalSettings.first_click = false;
