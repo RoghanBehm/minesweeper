@@ -9,7 +9,7 @@ void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &releas
 {
     SDL_Rect rect = {x, y, globalSettings.cell_size, globalSettings.cell_size};
 
-    if (rightClick || cell.isFlagged) {
+    if ((rightClick || cell.isFlagged) && !globalSettings.game_over) {
         rightClick = false;
         cell.isFlagged = true;
         SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
@@ -21,7 +21,7 @@ void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &releas
         return;
     }
 
-    else if (released || cell.isRevealed) {
+    else if ((released || cell.isRevealed) && !globalSettings.game_over) {
 
         cell.isRevealed = true;
         released = false;
@@ -73,7 +73,7 @@ void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &releas
         }
         return;
     }
-     else if (clicked) // While click held down
+     else if (clicked && !globalSettings.game_over) // While click held down
     {
         SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
         SDL_RenderFillRect(renderer, &rect);

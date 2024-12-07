@@ -45,7 +45,7 @@ int main()
 
     const int frameDelay = 1000 / 60;
     Uint32 frameStart = SDL_GetTicks();
-    plantMines(mine_grid, 300);
+    plantMines(mine_grid, 100);
     GameAssets assets;
 
     if (loadGameAssets(renderer, &assets) != 0) {
@@ -96,7 +96,7 @@ int main()
             if (globalSettings.regenerate) {
                     clearMines(mine_grid);
                     mine_grid = grid();
-                    plantMines(mine_grid, 50);
+                    plantMines(mine_grid, 100);
                     globalSettings.regenerate = false;
                     globalSettings.first_click = true;
             }
