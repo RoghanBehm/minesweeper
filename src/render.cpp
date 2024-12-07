@@ -8,7 +8,7 @@
 void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node& cell, GameAssets &assets, int nearbyMines, bool &rightClick)
 {
     SDL_Rect rect = {x, y, globalSettings.cell_size, globalSettings.cell_size};
-
+    
     if ((rightClick || cell.isFlagged) && !globalSettings.game_over) {
         rightClick = false;
         cell.isFlagged = true;
@@ -21,8 +21,8 @@ void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &releas
         return;
     }
 
-    else if ((released || cell.isRevealed) && !globalSettings.game_over) {
-
+    else if (released || cell.isRevealed) {
+        
         cell.isRevealed = true;
         released = false;
         

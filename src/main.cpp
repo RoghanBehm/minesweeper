@@ -60,28 +60,31 @@ int main()
     {
         
         while (SDL_PollEvent(&event))
-        {
+        {   
             if (event.type == SDL_QUIT)
             {   
                 running = false;
             }
-            else if (event.type == SDL_MOUSEBUTTONDOWN)
-            {
-                if (event.button.button == SDL_BUTTON_RIGHT) {
-                    SDL_GetMouseState(&mouseProps.mouseXc, &mouseProps.mouseYc);
-                } else {
-                    SDL_GetMouseState(&mouseProps.mouseX, &mouseProps.mouseY);
-                    mouseProps.mouseDown = true;
-                }
-                
-            } else if (event.type == SDL_MOUSEBUTTONUP) {
-                SDL_GetMouseState(&mouseProps.mouseXr, &mouseProps.mouseYr);
-                mouseProps.mouseDown = false;
-                mouseProps.released = true;
+            else if (!globalSettings.game_over) {
+        if (event.type == SDL_MOUSEBUTTONDOWN)
+                    {
+                        if (event.button.button == SDL_BUTTON_RIGHT) {
+                            SDL_GetMouseState(&mouseProps.mouseXc, &mouseProps.mouseYc);
+                        } else {
+                            SDL_GetMouseState(&mouseProps.mouseX, &mouseProps.mouseY);
+                            mouseProps.mouseDown = true;
+                        }
+                        
+                    } else if (event.type == SDL_MOUSEBUTTONUP) {
+                        SDL_GetMouseState(&mouseProps.mouseXr, &mouseProps.mouseYr);
+                        mouseProps.mouseDown = false;
+                        mouseProps.released = true;
+                    }
+                    else if (event.type == SDL_MOUSEMOTION && mouseProps.mouseDown) {
+                        SDL_GetMouseState(&mouseProps.mouseX, &mouseProps.mouseY);
+                    }
             }
-            else if (event.type == SDL_MOUSEMOTION && mouseProps.mouseDown) {
-                SDL_GetMouseState(&mouseProps.mouseX, &mouseProps.mouseY);
-            }
+            
         }
             
             // Background (black)
