@@ -5,22 +5,16 @@
 #include "settings.hpp"
 #include "game.hpp"
 
-void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node& cell, GameAssets &assets, int nearbyMines, bool rightClick)
+void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node& cell, GameAssets &assets, int nearbyMines)
 {
     SDL_Rect rect = {x, y, globalSettings.cell_size, globalSettings.cell_size};
-    
-    
-    // Render flagged state
+
     if (cell.isFlagged) {
         SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
         SDL_RenderCopy(renderer, assets.flag, NULL, &rect);
         return;
     }
 
-
- 
-    
-    
     if ((globalSettings.game_over && cell.hasMine) && !globalSettings.regenerate) {
         SDL_RenderCopy(renderer, assets.mine, NULL, &rect);
         return;

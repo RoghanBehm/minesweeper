@@ -11,7 +11,6 @@ Node node {
     .isRevealed = false,
     .isFlagged = false,
     .adjacentMines = 0,
-    .isRightClicked = false
     };
 
 std::vector<std::vector<Node>> grid()
@@ -165,18 +164,17 @@ void createGrid(SDL_Renderer *renderer, std::vector<std::vector<Node>> &grid, Mo
 
             // Handle right-click toggle
             if (cellClicked(mouseProps.mouseXc, mouseProps.mouseYc, cell_x, cell_y) && mouseProps.rightClicked) {
-                // Toggle the isFlagged state directly
                 grid[i][j].isFlagged = !grid[i][j].isFlagged;
-                mouseProps.rightClicked = false; // Process the click only once
+                mouseProps.rightClicked = false;
             }
 
-            // Pass the cell to draw_cell for rendering
+            // Pass current cell to draw_cell for rendering
             Node &currentCell = grid[i][j];
             mouseProps.released = cellClicked(mouseProps.mouseXr, mouseProps.mouseYr, cell_x, cell_y);
             int surroundingMines = checkSurrounding(grid, i, j);
-            draw_cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell, assets, surroundingMines, mouseProps.rightClicked);
+            draw_cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell, assets, surroundingMines);
 
-            // Handle blank cell reveal
+            // If current cell does not contain mine, reveal neighbouring cells if none contain mines
             if (currentCell.isRevealed && !currentCell.hasMine) {
                 revealBlanks(grid, i, j);
             }
