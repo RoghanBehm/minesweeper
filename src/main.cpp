@@ -91,8 +91,13 @@ int main()
             }
             
         }
+
+            // Draw background (black)
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+            SDL_RenderClear(renderer);
+
             int reset_x = globalSettings.menu_width / 2 - globalSettings.reset_button_width / 2;
-            bool reset_y = globalSettings.menu_height / 2 - globalSettings.reset_button_height / 2;
+            int reset_y = globalSettings.menu_height / 2 - globalSettings.reset_button_height / 2;
             bool reset_released = cellClicked(mouseProps.mouseXr, mouseProps.mouseYr, reset_x, reset_y);
             bool reset_clicked = cellClicked(mouseProps.mouseX, mouseProps.mouseY, reset_x, reset_y);
             
