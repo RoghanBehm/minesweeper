@@ -6,4 +6,4 @@
 
 constexpr int thickness = 3;
 constexpr int inset = 1.5;
-void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node& cell, GameAssets &assets, int nearbyMines, bool &rightClick);
+void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node& cell, GameAssets &assets, int nearbyMines, bool rightClick);

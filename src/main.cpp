@@ -35,7 +35,7 @@ int main()
         SDL_Quit();
         return 1;
     }
-
+    
 
     bool running = true;
     SDL_Event event;
@@ -66,19 +66,24 @@ int main()
                 running = false;
             }
             else if (!globalSettings.game_over) {
-        if (event.type == SDL_MOUSEBUTTONDOWN)
+                if (event.type == SDL_MOUSEBUTTONDOWN)
                     {
                         if (event.button.button == SDL_BUTTON_RIGHT) {
                             SDL_GetMouseState(&mouseProps.mouseXc, &mouseProps.mouseYc);
+                            mouseProps.rightClicked = true;
                         } else {
                             SDL_GetMouseState(&mouseProps.mouseX, &mouseProps.mouseY);
                             mouseProps.mouseDown = true;
                         }
                         
                     } else if (event.type == SDL_MOUSEBUTTONUP) {
+                        if (event.button.button == SDL_BUTTON_RIGHT) {
+                            mouseProps.rightClicked = false; 
+                        } else {
                         SDL_GetMouseState(&mouseProps.mouseXr, &mouseProps.mouseYr);
                         mouseProps.mouseDown = false;
                         mouseProps.released = true;
+                        }
                     }
                     else if (event.type == SDL_MOUSEMOTION && mouseProps.mouseDown) {
                         SDL_GetMouseState(&mouseProps.mouseX, &mouseProps.mouseY);

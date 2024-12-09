@@ -5,18 +5,23 @@
 #include "settings.hpp"
 #include "game.hpp"
 
-void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node& cell, GameAssets &assets, int nearbyMines, bool &rightClick)
+void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node& cell, GameAssets &assets, int nearbyMines, bool rightClick)
 {
     SDL_Rect rect = {x, y, globalSettings.cell_size, globalSettings.cell_size};
     
-    if ((rightClick || cell.isFlagged) && !globalSettings.game_over) {
-        rightClick = false;
-        cell.isFlagged = true;
+    
+    // Render flagged state
+    if (cell.isFlagged) {
         SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
         SDL_RenderCopy(renderer, assets.flag, NULL, &rect);
         return;
+    }
 
-    } else if ((globalSettings.game_over && cell.hasMine) && !globalSettings.regenerate) {
+
+ 
+    
+    
+    if ((globalSettings.game_over && cell.hasMine) && !globalSettings.regenerate) {
         SDL_RenderCopy(renderer, assets.mine, NULL, &rect);
         return;
     }
@@ -26,7 +31,7 @@ void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &releas
         cell.isRevealed = true;
         released = false;
         
-        if (clicked && cell.hasMine && !globalSettings.regenerate) {
+        if (cell.hasMine && !globalSettings.regenerate) {
             if (globalSettings.first_click) {
                 cell.hasMine = false;
                 globalSettings.regenerate = true;
@@ -73,7 +78,7 @@ void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &releas
         }
         return;
     }
-     else if (clicked && !globalSettings.game_over) // While click held down
+     else if (clicked) // While click held down
     {
         SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
         SDL_RenderFillRect(renderer, &rect);

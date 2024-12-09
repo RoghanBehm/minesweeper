@@ -11,6 +11,7 @@ struct Node {
     bool isRevealed;
     bool isFlagged;
     int adjacentMines;
+    bool isRightClicked;
 };
 
 struct Point {

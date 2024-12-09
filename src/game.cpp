@@ -10,7 +10,8 @@ Node node {
     .hasMine = false,
     .isRevealed = false,
     .isFlagged = false,
-    .adjacentMines = 0
+    .adjacentMines = 0,
+    .isRightClicked = false
     };
 
 std::vector<std::vector<Node>> grid()
@@ -157,21 +158,28 @@ void revealBlanks(std::vector<std::vector<Node>> &grid, int row, int col) {
 }
 
 void createGrid(SDL_Renderer *renderer, std::vector<std::vector<Node>> &grid, MouseProps &mouseProps, GameAssets &assets) {
-                for (size_t i = 0; i < grid.size(); i++)
-            {
-                for (size_t j = 0; j < grid[i].size(); ++j)
-                {
-                    int cell_x = j * globalSettings.cell_size;
-                    int cell_y = i * globalSettings.cell_size + globalSettings.menu_height;
-                    mouseProps.cellIsClicked = cellClicked(mouseProps.mouseX, mouseProps.mouseY, cell_x, cell_y);
-                    mouseProps.rightClicked = cellClicked(mouseProps.mouseXc, mouseProps.mouseYc, cell_x, cell_y);
-                    Node &currentCell = grid[i][j];
-                    mouseProps.released = cellClicked(mouseProps.mouseXr, mouseProps.mouseYr, cell_x, cell_y);
-                    int surroundingMines = checkSurrounding(grid, i, j);
-                    draw_cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell, assets, surroundingMines, mouseProps.rightClicked);
-                    if (currentCell.isRevealed && !currentCell.hasMine) {
-                        revealBlanks(grid, i, j);
-                    }
-                }
+    for (size_t i = 0; i < grid.size(); i++) {
+        for (size_t j = 0; j < grid[i].size(); ++j) {
+            int cell_x = j * globalSettings.cell_size;
+            int cell_y = i * globalSettings.cell_size + globalSettings.menu_height;
+
+            // Handle right-click toggle
+            if (cellClicked(mouseProps.mouseXc, mouseProps.mouseYc, cell_x, cell_y) && mouseProps.rightClicked) {
+                // Toggle the isFlagged state directly
+                grid[i][j].isFlagged = !grid[i][j].isFlagged;
+                mouseProps.rightClicked = false; // Process the click only once
             }
+
+            // Pass the cell to draw_cell for rendering
+            Node &currentCell = grid[i][j];
+            mouseProps.released = cellClicked(mouseProps.mouseXr, mouseProps.mouseYr, cell_x, cell_y);
+            int surroundingMines = checkSurrounding(grid, i, j);
+            draw_cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell, assets, surroundingMines, mouseProps.rightClicked);
+
+            // Handle blank cell reveal
+            if (currentCell.isRevealed && !currentCell.hasMine) {
+                revealBlanks(grid, i, j);
+            }
+        }
+    }
 }
