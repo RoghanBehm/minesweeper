@@ -15,6 +15,7 @@ struct Settings {
 extern Settings globalSettings;
 typedef struct {
     SDL_Texture *mine;
+    SDL_Texture *clicked_mine;
     SDL_Texture *flag;
     SDL_Texture *prox1;
     SDL_Texture *prox2;

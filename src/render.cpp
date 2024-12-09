@@ -16,6 +16,10 @@ void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &releas
     }
 
     if ((globalSettings.game_over && cell.hasMine) && !globalSettings.regenerate) {
+        if (released) {
+            SDL_RenderCopy(renderer, assets.clicked_mine, NULL, &rect);
+            return;
+        }
         SDL_RenderCopy(renderer, assets.mine, NULL, &rect);
         return;
     }

@@ -19,6 +19,12 @@ int loadGameAssets(SDL_Renderer *renderer, GameAssets *assets) {
         return 1;
     }
 
+    assets->clicked_mine = IMG_LoadTexture(renderer, "assets/Clicked_Mine.png");
+    if (!assets->mine) {
+        printf("Failed to load mine texture: %s\n", SDL_GetError());
+        return 1;
+    }
+
     assets->flag = IMG_LoadTexture(renderer, "assets/Minesweeper_flag.png");
     if (!assets->flag) {
         printf("Failed to load flag texture: %s\n", SDL_GetError());
