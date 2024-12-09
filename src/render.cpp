@@ -103,3 +103,30 @@ void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &releas
     SDL_Rect right = {rect.x + rect.w - thickness, rect.y + inset, thickness, rect.h - 2 * inset};
     SDL_RenderFillRect(renderer, &right);
 }
+
+void draw_menu(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released) {
+            // Background (black)
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+            SDL_RenderClear(renderer);
+
+            // Menu
+            SDL_SetRenderDrawColor(renderer, 123, 123, 123, 255);
+            SDL_Rect menu = {0, 0, globalSettings.menu_width, globalSettings.menu_height};
+            SDL_RenderFillRect(renderer, &menu);
+            SDL_SetRenderDrawColor(renderer, 0, 10, 103, 0);
+            SDL_Rect reset_button = {
+                x,
+                y,
+                globalSettings.reset_button_height,
+                globalSettings.reset_button_width
+            };
+            SDL_RenderFillRect(renderer, &reset_button);
+            if (clicked) {
+                std::cout << "hi";
+            }
+            if (released) {
+                globalSettings.regenerate = true;
+            }
+
+            
+}

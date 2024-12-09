@@ -167,7 +167,7 @@ void createGrid(SDL_Renderer *renderer, std::vector<std::vector<Node>> &grid, Mo
                 grid[i][j].isFlagged = !grid[i][j].isFlagged;
                 mouseProps.rightClicked = false;
             }
-
+            mouseProps.cellIsClicked = cellClicked(mouseProps.mouseX, mouseProps.mouseY, cell_x, cell_y);
             // Pass current cell to draw_cell for rendering
             Node &currentCell = grid[i][j];
             mouseProps.released = cellClicked(mouseProps.mouseXr, mouseProps.mouseYr, cell_x, cell_y);

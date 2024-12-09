@@ -80,9 +80,9 @@ int main()
                         if (event.button.button == SDL_BUTTON_RIGHT) {
                             mouseProps.rightClicked = false; 
                         } else {
-                        SDL_GetMouseState(&mouseProps.mouseXr, &mouseProps.mouseYr);
-                        mouseProps.mouseDown = false;
-                        mouseProps.released = true;
+                            SDL_GetMouseState(&mouseProps.mouseXr, &mouseProps.mouseYr);
+                            mouseProps.mouseDown = false;
+                            mouseProps.released = true;
                         }
                     }
                     else if (event.type == SDL_MOUSEMOTION && mouseProps.mouseDown) {
@@ -91,16 +91,12 @@ int main()
             }
             
         }
+            int reset_x = globalSettings.menu_width / 2 - globalSettings.reset_button_width / 2;
+            bool reset_y = globalSettings.menu_height / 2 - globalSettings.reset_button_height / 2;
+            bool reset_released = cellClicked(mouseProps.mouseXr, mouseProps.mouseYr, reset_x, reset_y);
+            bool reset_clicked = cellClicked(mouseProps.mouseX, mouseProps.mouseY, reset_x, reset_y);
             
-            // Background (black)
-            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-            SDL_RenderClear(renderer);
-            // Menu
-            SDL_SetRenderDrawColor(renderer, 123, 123, 123, 255);
-            SDL_Rect menu = {0, 0, globalSettings.menu_width, globalSettings.menu_height};
-            SDL_RenderFillRect(renderer, &menu);
-
-
+            // Reset game if regenerate
             if (globalSettings.regenerate) {
                     clearMines(mine_grid);
                     mine_grid = grid();
@@ -108,7 +104,7 @@ int main()
                     globalSettings.regenerate = false;
                     globalSettings.first_click = true;
             }
-
+            draw_menu(renderer, reset_x, reset_y, reset_clicked, reset_released);
             createGrid(renderer, mine_grid, mouseProps, assets);
 
             SDL_RenderPresent(renderer);

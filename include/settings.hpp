@@ -5,6 +5,8 @@ struct Settings {
     int cell_size;
     int menu_height;
     int menu_width;
+    int reset_button_height;
+    int reset_button_width;
     bool game_over;
     bool first_click;
     bool regenerate;
