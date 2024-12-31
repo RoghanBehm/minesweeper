@@ -19,14 +19,31 @@ struct Point {
     int y;
 };
 
-class Draw;
+class Draw; //Forward-declaration
 
-std::vector<std::vector<Node>> grid();
+class Game {
+private:
+    
+    int rows;
+    int cols;
+    std::vector<std::vector<Node>> grid;
+    int numMines;
+public:
+    Game(int rows, int cols, int numMines); // Constructor
+
+    // Grid Operations
+    void plantMines();
+    void clearMines();
+    int checkSurrounding(int row, int col) const;
+    std::array<Point, 8> returnSurrounding(int row, int col) const;
+    void revealBlock(int row, int col);
+    void revealBlanks(int row, int col);
+    void createGrid(SDL_Renderer *renderer, MouseProps &mouseProps, GameAssets &assets, Draw& draw);
+
+    // Accessors
+    const std::vector<std::vector<Node>>& getGrid() const;
+
+};
+
+
 bool cellClicked (int x, int y, int cell_x, int cell_y);
-void plantMines(std::vector<std::vector<Node>> &grid, int numMines);
-int checkSurrounding(std::vector<std::vector<Node>> &grid, int row, int col);
-std::array<Point, 8> returnSurrounding(std::vector<std::vector<Node>> &grid, int row, int col);
-void revealBlock(std::vector<std::vector<Node>> &grid, int row, int col);
-void revealBlanks(std::vector<std::vector<Node>> &grid, int row, int col);
-void createGrid(SDL_Renderer *renderer, std::vector<std::vector<Node>> &grid, MouseProps &mouseProps, GameAssets &assets, Draw& draw);
-void clearMines(std::vector<std::vector<Node>> &grid);

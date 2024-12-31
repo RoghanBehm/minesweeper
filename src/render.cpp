@@ -148,3 +148,5 @@ void Draw::menu(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &relea
 
             
 }
+
+
