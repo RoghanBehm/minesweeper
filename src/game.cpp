@@ -168,11 +168,11 @@ void createGrid(SDL_Renderer *renderer, std::vector<std::vector<Node>> &grid, Mo
                 mouseProps.rightClicked = false;
             }
             mouseProps.cellIsClicked = cellClicked(mouseProps.mouseX, mouseProps.mouseY, cell_x, cell_y);
-            // Pass current cell to draw_cell for rendering
+            // Pass current cell to cell for rendering
             Node &currentCell = grid[i][j];
             mouseProps.released = cellClicked(mouseProps.mouseXr, mouseProps.mouseYr, cell_x, cell_y);
             int surroundingMines = checkSurrounding(grid, i, j);
-            draw.draw_cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell, assets, surroundingMines);
+            draw.cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell, assets, surroundingMines);
 
             // If current cell does not contain mine, reveal neighbouring cells if none contain mines
             if (currentCell.isRevealed && !currentCell.hasMine) {

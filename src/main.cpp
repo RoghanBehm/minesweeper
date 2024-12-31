@@ -110,7 +110,7 @@ int main()
                     globalSettings.first_click = true;
             }
             Draw draw;
-            draw.draw_menu(renderer, reset_x, reset_y, reset_clicked, reset_released);
+            draw.menu(renderer, reset_x, reset_y, reset_clicked, reset_released);
             createGrid(renderer, mine_grid, mouseProps, assets, draw);
 
             SDL_RenderPresent(renderer);

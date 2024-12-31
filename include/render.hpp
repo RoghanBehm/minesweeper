@@ -12,8 +12,8 @@ struct Node;
 
 class Draw {
 public:
-    void draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node& cell, GameAssets &assets, int nearbyMines);
-    void draw_menu(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released);
+    void cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node& cell, GameAssets &assets, int nearbyMines);
+    void menu(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released);
 private:
     void default_cell(SDL_Renderer *renderer, SDL_Rect rect);
     void mine_prox_cell(SDL_Renderer *renderer, GameAssets &assets, int nearbyMines, SDL_Rect rect);

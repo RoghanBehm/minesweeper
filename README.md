@@ -1,0 +1,1 @@
+Classic Minesweeper game written in C++. SDL2 is used for window creation, basic input handling, drawing pixels to the screen, and swapping out pixel regions with images.

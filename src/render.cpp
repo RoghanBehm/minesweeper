@@ -67,7 +67,7 @@ void Draw::mine_prox_cell(SDL_Renderer *renderer, GameAssets &assets, int nearby
         }
 }
 
-void Draw::draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node& cell, GameAssets &assets, int nearbyMines)
+void Draw::cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node& cell, GameAssets &assets, int nearbyMines)
 {
     SDL_Rect rect = {x, y, globalSettings.cell_size, globalSettings.cell_size};
 
@@ -117,7 +117,7 @@ void Draw::draw_cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &
 
 }
 
-void Draw::draw_menu(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released) {
+void Draw::menu(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released) {
 
     // Menu
     SDL_SetRenderDrawColor(renderer, 123, 123, 123, 255);
