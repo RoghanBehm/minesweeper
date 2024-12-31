@@ -109,8 +109,9 @@ int main()
                     globalSettings.regenerate = false;
                     globalSettings.first_click = true;
             }
-            draw_menu(renderer, reset_x, reset_y, reset_clicked, reset_released);
-            createGrid(renderer, mine_grid, mouseProps, assets);
+            Draw draw;
+            draw.draw_menu(renderer, reset_x, reset_y, reset_clicked, reset_released);
+            createGrid(renderer, mine_grid, mouseProps, assets, draw);
 
             SDL_RenderPresent(renderer);
             Uint32 frameTime = SDL_GetTicks() - frameStart;
