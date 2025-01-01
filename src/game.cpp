@@ -28,6 +28,7 @@ void Game::reset() {
 void Game::initialize() {
 
     grid = std::vector<std::vector<Node>>(rows, std::vector<Node>(cols));
+    globalSettings.game_over = false;
     plantMines();
 
 }
@@ -197,9 +198,13 @@ void Game::createGrid(SDL_Renderer *renderer, MouseProps &mouseProps, GameAssets
             int cell_y = i * globalSettings.cell_size + globalSettings.menu_height;
 
             // Handle right-click toggle
-            if (cellClicked(mouseProps.mouseXc, mouseProps.mouseYc, cell_x, cell_y) && mouseProps.rightClicked && !globalSettings.game_over) {
-                grid[i][j].isFlagged = !grid[i][j].isFlagged;
-                mouseProps.rightClicked = false;
+            
+            if (cellClicked(mouseProps.mouseXc, mouseProps.mouseYc, cell_x, cell_y) && mouseProps.rightClicked) {
+                if (!globalSettings.game_over) {
+                    grid[i][j].isFlagged = !grid[i][j].isFlagged;
+                    mouseProps.rightClicked = false;
+                }
+                
             }
             mouseProps.cellIsClicked = cellClicked(mouseProps.mouseX, mouseProps.mouseY, cell_x, cell_y);
             // Pass current cell to cell for rendering
