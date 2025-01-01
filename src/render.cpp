@@ -85,9 +85,9 @@ void Draw::cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &relea
         return;
     }
 
-    if (released || cell.isRevealed) {
-        if (released) {
-            game.revealCell(row, col); // Call Game::revealCell
+    if ((released || cell.isRevealed) && !globalSettings.game_over) {
+        if (released && !globalSettings.game_over) {
+            game.revealCell(row, col);
             released = false;
         }
 
@@ -106,7 +106,7 @@ void Draw::cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &relea
 
         mine_prox_cell(renderer, assets, nearbyMines, rect);
         return;
-    } else if (clicked) {
+    } else if (clicked && !globalSettings.game_over) {
         SDL_SetRenderDrawColor(renderer, 189, 189, 189, 255);
         SDL_RenderFillRect(renderer, &rect);
         return;

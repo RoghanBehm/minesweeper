@@ -58,7 +58,7 @@ int main() {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 running = false;
-            } else if (!globalSettings.game_over) {
+            } else {
                 if (event.type == SDL_MOUSEBUTTONDOWN) {
                     if (event.button.button == SDL_BUTTON_RIGHT) {
                         SDL_GetMouseState(&mouseProps.mouseXc, &mouseProps.mouseYc);
