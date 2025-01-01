@@ -67,7 +67,7 @@ void Draw::mine_prox_cell(SDL_Renderer *renderer, GameAssets &assets, int nearby
         }
 }
 
-void Draw::cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node &cell, Game &game, GameAssets &assets, int nearbyMines) {
+void Draw::cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node &cell, Game &game, GameAssets &assets, int nearbyMines, int row, int col) {
     SDL_Rect rect = {x, y, globalSettings.cell_size, globalSettings.cell_size};
 
     if (cell.isFlagged) {
@@ -87,7 +87,7 @@ void Draw::cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &relea
 
     if (released || cell.isRevealed) {
         if (released) {
-            game.revealCell(y / globalSettings.cell_size, x / globalSettings.cell_size); // Call Game::revealCell
+            game.revealCell(row, col); // Call Game::revealCell
             released = false;
         }
 

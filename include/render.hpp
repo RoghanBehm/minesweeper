@@ -17,7 +17,7 @@ private:
     void mine_prox_cell(SDL_Renderer *renderer, GameAssets &assets, int nearbyMines, SDL_Rect rect);
 
 public:
-    void cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node &cell, Game &game, GameAssets &assets, int nearbyMines);
+    void cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node &cell, Game &game, GameAssets &assets, int nearbyMines, int row, int col);
     void menu(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released);
 
 };

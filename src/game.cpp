@@ -206,7 +206,8 @@ void Game::createGrid(SDL_Renderer *renderer, MouseProps &mouseProps, GameAssets
             Node &currentCell = grid[i][j];
             mouseProps.released = cellClicked(mouseProps.mouseXr, mouseProps.mouseYr, cell_x, cell_y);
             int surroundingMines = checkSurrounding(i, j);
-            draw.cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell, *this, assets, surroundingMines);
+            draw.cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell, *this, assets, surroundingMines, i, j);
+
 
             // If current cell does not contain mine, reveal neighbouring cells if none contain mines
             if (currentCell.isRevealed && !currentCell.hasMine && !globalSettings.regenerate) {

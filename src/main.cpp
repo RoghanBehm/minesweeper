@@ -32,7 +32,7 @@ int main() {
     }
 
     // Initialize game objects
-    Game game(16, 30, 1);
+    Game game(16, 30, 100);
     Draw draw;
     GameAssets assets;
     MouseProps mouseProps;
