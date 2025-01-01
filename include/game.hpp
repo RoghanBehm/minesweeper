@@ -19,7 +19,7 @@ struct Point {
     int y;
 };
 
-class Draw; //Forward-declaration
+class Draw; //Forward declaration
 
 class Game {
 private:
@@ -28,10 +28,12 @@ private:
     int cols;
     std::vector<std::vector<Node>> grid;
     int numMines;
+
+    void initialize();
 public:
     Game(int rows, int cols, int numMines); // Constructor
-
-    // Grid Operations
+    
+    void reset();
     void plantMines();
     void clearMines();
     int checkSurrounding(int row, int col) const;
@@ -39,9 +41,6 @@ public:
     void revealBlock(int row, int col);
     void revealBlanks(int row, int col);
     void createGrid(SDL_Renderer *renderer, MouseProps &mouseProps, GameAssets &assets, Draw& draw);
-
-    // Accessors
-    const std::vector<std::vector<Node>>& getGrid() const;
 
 };
 

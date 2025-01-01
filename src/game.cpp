@@ -19,10 +19,24 @@ bool cellClicked(int x, int y, int cell_x, int cell_y)
     return (x >= cell_x && x <= cell_x + globalSettings.cell_size &&
             y >= cell_y && y <= cell_y + globalSettings.cell_size);
 }
+void Game::reset() {
+
+    grid = std::vector<std::vector<Node>>(rows, std::vector<Node>(cols));
+    plantMines();
+
+}
+
+void Game::initialize() {
+
+    grid = std::vector<std::vector<Node>>(rows, std::vector<Node>(cols));
+    plantMines();
+
+}
 
 Game::Game(int rows, int cols, int numMines)
-    : rows(rows), cols(cols), grid(rows, std::vector<Node>(cols)), numMines(numMines) {
-    std::srand(std::time(nullptr)); // Seed RNG
+    : rows(rows), cols(cols), numMines(numMines) {
+    std::srand(std::time(nullptr));
+    initialize();
 }
 
 void Game::clearMines()
@@ -31,6 +45,9 @@ void Game::clearMines()
         for (size_t j = 0; j < grid[i].size(); ++j) {
             if (grid[i][j].hasMine) {
                 grid[i][j].hasMine = false;
+                grid[i][j].isRevealed = false;
+                grid[i][j].isFlagged = false;
+                grid[i][j].adjacentMines = 0;
             }
         }
     }
@@ -168,7 +185,7 @@ void Game::createGrid(SDL_Renderer *renderer, MouseProps &mouseProps, GameAssets
             draw.cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell, assets, surroundingMines);
 
             // If current cell does not contain mine, reveal neighbouring cells if none contain mines
-            if (currentCell.isRevealed && !currentCell.hasMine) {
+            if (currentCell.isRevealed && !currentCell.hasMine && !globalSettings.regenerate) {
                 revealBlanks(i, j);
             }
         }

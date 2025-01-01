@@ -7,7 +7,6 @@
 #include "mouseProps.hpp"
 
 int main() {
-    std::srand(std::time(nullptr));
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         SDL_Log("Unable to initialise SDL: %s", SDL_GetError());
@@ -95,11 +94,11 @@ int main() {
 
         // Reset game if regenerate
         if (globalSettings.regenerate) {
-            game.clearMines();  // Clear existing mines
-            game.plantMines();  // Replant mines
+            game.reset();
             globalSettings.regenerate = false;
             globalSettings.first_click = true;
         }
+        
 
         // Render menu
         draw.menu(renderer, reset_x, reset_y, reset_clicked, reset_released);

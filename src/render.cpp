@@ -96,6 +96,7 @@ void Draw::cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &relea
                 cell.hasMine = false;
                 globalSettings.regenerate = true;
                 globalSettings.first_click = false;
+                
                 return;
             }
             SDL_RenderCopy(renderer, assets.mine, NULL, &rect);
@@ -142,6 +143,7 @@ void Draw::menu(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &relea
 
     if (released) {
         globalSettings.regenerate = true;
+        std::cout << "dsadas";
         SDL_SetRenderDrawColor(renderer, 0, 10, 103, 0);
         SDL_RenderFillRect(renderer, &reset_button);
     }
