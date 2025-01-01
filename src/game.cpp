@@ -156,6 +156,7 @@ void Game::revealBlock(int row, int col) {
     }
 }
 
+
 bool Game::checkWin() {
     if (safeCells == revealedCells) {
         return true;

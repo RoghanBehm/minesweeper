@@ -91,6 +91,13 @@ void Draw::cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &relea
             released = false;
         }
 
+        if (game.checkSurrounding(row, col) && globalSettings.first_click) {
+                cell.hasMine = false;
+                globalSettings.regenerate = true;
+                globalSettings.first_click = false;
+                return;
+        }
+
         if (cell.hasMine && !globalSettings.regenerate) {
             if (globalSettings.first_click) {
                 cell.hasMine = false;
