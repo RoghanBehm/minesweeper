@@ -84,6 +84,7 @@ int main() {
         // Draw background
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
+ 
 
         // Menu input
         int reset_x = globalSettings.menu_width / 2 - globalSettings.reset_button_width / 2;
@@ -106,8 +107,6 @@ int main() {
         game.createGrid(renderer, mouseProps, assets, draw);
         if (game.checkWin()) {
             std::cout << "winnnnnna";
-        } else {
-            std::cout << "no";
         }
 
         SDL_RenderPresent(renderer);

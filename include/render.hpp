@@ -11,7 +11,7 @@ constexpr int inset = 1.5;
 struct Node;
 
 class Draw {
-    
+     
 private:
     void default_cell(SDL_Renderer *renderer, SDL_Rect rect);
     void mine_prox_cell(SDL_Renderer *renderer, GameAssets &assets, int nearbyMines, SDL_Rect rect);

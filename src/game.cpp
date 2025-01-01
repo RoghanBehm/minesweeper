@@ -201,7 +201,7 @@ void Game::createGrid(SDL_Renderer *renderer, MouseProps &mouseProps, GameAssets
             // Handle right-click toggle
             
             if (cellClicked(mouseProps.mouseXc, mouseProps.mouseYc, cell_x, cell_y) && mouseProps.rightClicked) {
-                if (!globalSettings.game_over) {
+                if (!globalSettings.game_over && !grid[i][j].isRevealed) {
                     grid[i][j].isFlagged = !grid[i][j].isFlagged;
                     mouseProps.rightClicked = false;
                 }

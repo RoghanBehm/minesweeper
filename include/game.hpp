@@ -32,15 +32,15 @@ private:
     int revealedCells;
 
     void initialize();
+    void revealBlock(int row, int col);
+    std::array<Point, 8> returnSurrounding(int row, int col) const;
+    void clearMines();
+    void plantMines();
 public:
-    Game(int rows, int cols, int numMines); // Constructor
+    Game(int rows, int cols, int numMines);
     
     void reset();
-    void plantMines();
-    void clearMines();
     int checkSurrounding(int row, int col) const;
-    std::array<Point, 8> returnSurrounding(int row, int col) const;
-    void revealBlock(int row, int col);
     void revealBlanks(int row, int col);
     void createGrid(SDL_Renderer *renderer, MouseProps &mouseProps, GameAssets &assets, Draw& draw);
     bool checkWin();
