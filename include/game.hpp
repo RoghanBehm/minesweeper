@@ -28,6 +28,8 @@ private:
     int cols;
     std::vector<std::vector<Node>> grid;
     int numMines;
+    int safeCells;
+    int revealedCells;
 
     void initialize();
 public:
@@ -41,7 +43,8 @@ public:
     void revealBlock(int row, int col);
     void revealBlanks(int row, int col);
     void createGrid(SDL_Renderer *renderer, MouseProps &mouseProps, GameAssets &assets, Draw& draw);
-
+    bool checkWin();
+    void revealCell(int row, int col);
 };
 
 

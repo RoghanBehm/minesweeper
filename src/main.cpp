@@ -32,7 +32,7 @@ int main() {
     }
 
     // Initialize game objects
-    Game game(16, 30, 100);
+    Game game(16, 30, 1);
     Draw draw;
     GameAssets assets;
     MouseProps mouseProps;
@@ -52,7 +52,6 @@ int main() {
     const int frameDelay = 1000 / 60;
     Uint32 frameStart = SDL_GetTicks();
 
-    game.plantMines();
 
     while (running) {
         // Handle events
@@ -105,7 +104,11 @@ int main() {
 
         // Render game grid
         game.createGrid(renderer, mouseProps, assets, draw);
-
+        if (game.checkWin()) {
+            std::cout << "winnnnnna";
+        } else {
+            std::cout << "no";
+        }
 
         SDL_RenderPresent(renderer);
         Uint32 frameTime = SDL_GetTicks() - frameStart;
