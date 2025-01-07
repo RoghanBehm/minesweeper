@@ -112,7 +112,7 @@ int main() {
         draw.menu(renderer, reset_x, reset_y, reset_clicked, reset_released);
 
         // Render game grid
-        game.createGrid(renderer, mouseProps, assets, draw);
+        game.createGrid(renderer, client, mouseProps, assets, draw);
         if (game.checkWin()) {
             std::cout << "winnnnnna";
         }

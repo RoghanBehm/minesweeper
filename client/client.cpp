@@ -7,10 +7,8 @@
 
 using boost::asio::ip::tcp;
 
-class NetworkClient
-{
-public:
-    NetworkClient(boost::asio::io_context& ioc, const std::string& host, const std::string& port)
+
+    NetworkClient::NetworkClient(boost::asio::io_context& ioc, const std::string& host, const std::string& port)
         : socket_(ioc)
     {
         tcp::resolver resolver(ioc);
@@ -21,13 +19,13 @@ public:
     }
 
 
-    void send_message(const std::string& message)
+    void NetworkClient::send_message(const std::array<int, 2>& message)
     {
 
         boost::asio::post(socket_.get_executor(), [this, message]()
         {
             boost::asio::async_write(socket_,
-                                     boost::asio::buffer(message + "\n"),
+                                     boost::asio::buffer(message),
                                      [](const boost::system::error_code& ec, std::size_t bytes)
                                      {
                                          if (!ec)
@@ -38,8 +36,8 @@ public:
         });
     }
 
-private:
-    void async_read()
+
+    void NetworkClient::async_read()
     {
 
         auto buf = std::make_shared<boost::asio::streambuf>();
@@ -56,7 +54,7 @@ private:
 
                     std::cout << "Received: " << line << std::endl;
 
-
+                    // Start another read:
                     async_read();
                 }
                 else
@@ -66,5 +64,4 @@ private:
             });
     }
 
-    tcp::socket socket_;
-};
+

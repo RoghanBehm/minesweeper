@@ -6,6 +6,7 @@
 #include <ctime>
 #include "mouseProps.hpp"
 #include "settings.hpp"
+#include "../client/client.hpp"
 
 struct Node {
     bool hasMine;
@@ -42,7 +43,7 @@ public:
     void reset();
     int checkSurrounding(int row, int col) const;
     void revealBlanks(int row, int col);
-    void createGrid(SDL_Renderer *renderer, MouseProps &mouseProps, GameAssets &assets, Draw& draw);
+    void createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps &mouseProps, GameAssets &assets, Draw& draw);
     bool checkWin();
     void revealCell(int row, int col);
 };

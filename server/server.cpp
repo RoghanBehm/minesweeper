@@ -1,4 +1,4 @@
-#include <iostream>
+/*#include <iostream>
 #include <string>
 #include <vector>
 #include <memory>
@@ -34,7 +34,7 @@ public:
         auto self = shared_from_this();
         std::string formatted_message = message + "\n";
         boost::asio::async_write(socket_, boost::asio::buffer(formatted_message),
-            [this, self](const boost::system::error_code& error, std::size_t /*bytes_transferred*/) {
+            [this, self](const boost::system::error_code& error, std::size_t /*bytes_transferred*//*) {
                 if (error)
                 {
                     std::cout << "Error sending coordinates: " << error.message() << std::endl;
@@ -146,3 +146,4 @@ int main()
 
     return 0;
 }
+*/

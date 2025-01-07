@@ -1,10 +1,11 @@
 #include <vector>
 #include <iostream>
-
+#include <array>
 
 
 #include "game.hpp"
 #include "render.hpp"
+
 
 Node node {
     .hasMine = false,
@@ -192,7 +193,7 @@ void Game::revealCell(int row, int col) {
 }
 
 
-void Game::createGrid(SDL_Renderer *renderer, MouseProps &mouseProps, GameAssets &assets, Draw& draw){
+void Game::createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps &mouseProps, GameAssets &assets, Draw& draw){
     for (size_t i = 0; i < grid.size(); i++) {
         for (size_t j = 0; j < grid[i].size(); ++j) {
             int cell_x = j * globalSettings.cell_size;
@@ -207,7 +208,11 @@ void Game::createGrid(SDL_Renderer *renderer, MouseProps &mouseProps, GameAssets
                 }
                 
             }
-            mouseProps.cellIsClicked = cellClicked(mouseProps.mouseX, mouseProps.mouseY, cell_x, cell_y);
+            if ((mouseProps.cellIsClicked = cellClicked(mouseProps.mouseX, mouseProps.mouseY, cell_x, cell_y)))
+            {
+                std::array<int, 2> coordinates = {cell_x, cell_y};
+                client.send_message(coordinates);
+            };
             // Pass current cell to cell for rendering
             Node &currentCell = grid[i][j];
             mouseProps.released = cellClicked(mouseProps.mouseXr, mouseProps.mouseYr, cell_x, cell_y);
