@@ -1,5 +1,6 @@
-/*#include <iostream>
+#include <iostream>
 #include <string>
+#include <array>
 #include <vector>
 #include <memory>
 #include <algorithm>
@@ -29,12 +30,11 @@ public:
         do_read();
     }
 
-    void send_message(const std::string& message)
+    void send_message(const std::array<int, 2>& message)
     {
         auto self = shared_from_this();
-        std::string formatted_message = message + "\n";
-        boost::asio::async_write(socket_, boost::asio::buffer(formatted_message),
-            [this, self](const boost::system::error_code& error, std::size_t /*bytes_transferred*//*) {
+        boost::asio::async_write(socket_, boost::asio::buffer(message),
+            [this, self](const boost::system::error_code& error, std::size_t /*bytes_transferred*/) {
                 if (error)
                 {
                     std::cout << "Error sending coordinates: " << error.message() << std::endl;
@@ -64,7 +64,7 @@ public:
         start_accept();
     }
 
-    void broadcast_message(const std::string& message, std::shared_ptr<tcp_connection> sender)
+    void broadcast_message(const std::array<int, 2>& message, std::shared_ptr<tcp_connection> sender)
     {
         for (auto& client : clients_)
         {
@@ -110,15 +110,18 @@ private:
 void tcp_connection::do_read()
 {
     auto self = shared_from_this();
-    socket_.async_read_some(boost::asio::buffer(buffer_),
-        [this, self](const boost::system::error_code& error, std::size_t bytes_transferred) {
+    auto message = std::make_shared<std::array<int, 2>>();
+
+    boost::asio::async_read(
+        socket_,
+        boost::asio::buffer(*message),
+        [this, self, message](const boost::system::error_code& error, std::size_t /*bytes_transferred*/) {
             if (!error)
             {
-                std::string message(buffer_.data(), bytes_transferred);
-                std::cout << "Received: " << message << std::endl;
+                std::cout << "Received coordinates: " 
+                          << (*message)[0] << ", " << (*message)[1] << std::endl;
 
-                server_.broadcast_message(message, self);
-
+                server_.broadcast_message(*message, self);
                 do_read();
             }
             else
@@ -128,6 +131,7 @@ void tcp_connection::do_read()
             }
         });
 }
+
 
 int main()
 {
@@ -146,4 +150,3 @@ int main()
 
     return 0;
 }
-*/
