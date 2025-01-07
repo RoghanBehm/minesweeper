@@ -5,8 +5,16 @@
 #include "game.hpp"
 #include "render.hpp"
 #include "mouseProps.hpp"
+#include <array>
+#include <string>
+#include <boost/asio.hpp>
+#include "../client/client.hpp"
 
 int main() {
+    
+    boost::asio::io_context io_context;
+    NetworkClient client(io_context, "localhost", "8000");
+    std::thread io_thread([&io_context]() { io_context.run(); });
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         SDL_Log("Unable to initialise SDL: %s", SDL_GetError());

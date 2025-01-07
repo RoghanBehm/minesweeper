@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.c": "c",
         "array": "cpp",
         "atomic": "cpp",
         "bit": "cpp",
@@ -47,6 +48,7 @@
         "streambuf": "cpp",
         "cinttypes": "cpp",
         "typeinfo": "cpp",
-        "ctime": "cpp"
+        "ctime": "cpp",
+        "*.ipp": "cpp"
     }
 }
