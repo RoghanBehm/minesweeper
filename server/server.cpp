@@ -5,6 +5,7 @@
 #include <memory>
 #include <algorithm>
 #include <boost/asio.hpp>
+#include "../include/serialize.hpp"
 
 using boost::asio::ip::tcp;
 
@@ -30,7 +31,7 @@ public:
         do_read();
     }
 
-    void send_message(const std::array<int, 2>& message)
+    void send_message(const std::vector<char>& message)
     {
         auto self = shared_from_this();
         boost::asio::async_write(socket_, boost::asio::buffer(message),
@@ -64,7 +65,7 @@ public:
         start_accept();
     }
 
-    void broadcast_message(const std::array<int, 2>& message, std::shared_ptr<tcp_connection> sender)
+    void broadcast_message(const std::vector<char>& message, std::shared_ptr<tcp_connection> sender)
     {
         for (auto& client : clients_)
         {
@@ -109,19 +110,31 @@ private:
 
 void tcp_connection::do_read()
 {
-    auto self = shared_from_this();
-    auto message = std::make_shared<std::array<int, 2>>();
+    // Allocate a vector of 128 bytes (or bigger if you anticipate more).
+    auto message = std::make_shared<std::vector<char>>(128);
 
+    // Now read *up to* 128 bytes
+    auto self = shared_from_this();
     boost::asio::async_read(
         socket_,
         boost::asio::buffer(*message),
-        [this, self, message](const boost::system::error_code& error, std::size_t /*bytes_transferred*/) {
+        [this, self, message](const boost::system::error_code& error, std::size_t bytes_transferred)
+        {
             if (!error)
             {
-                std::cout << "Received coordinates: " 
-                          << (*message)[0] << ", " << (*message)[1] << std::endl;
+                message->resize(bytes_transferred);
+
+                auto deserialized_coords = deserialize_pairs(*message);
+                if (!deserialized_coords.empty())
+                {
+                    std::cout << "Received coordinates: ";
+                    for (auto& [x, y] : deserialized_coords)
+                        std::cout << "(" << x << ", " << y << ") ";
+                    std::cout << std::endl;
+                }
 
                 server_.broadcast_message(*message, self);
+
                 do_read();
             }
             else
@@ -129,8 +142,11 @@ void tcp_connection::do_read()
                 std::cout << "Client disconnected." << std::endl;
                 server_.remove_client(self);
             }
-        });
+        }
+    );
 }
+
+
 
 
 int main()

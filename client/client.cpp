@@ -4,6 +4,7 @@
 #include <iostream>
 #include <boost/asio.hpp>
 #include "client.hpp"
+#include "../include/serialize.hpp"
 
 using boost::asio::ip::tcp;
 
@@ -19,7 +20,7 @@ using boost::asio::ip::tcp;
     }
 
 
-    void NetworkClient::send_message(const std::array<int, 2>& message)
+    void NetworkClient::send_message(const std::vector<char>& message)
     {
 
         boost::asio::post(socket_.get_executor(), [this, message]()
@@ -38,30 +39,33 @@ using boost::asio::ip::tcp;
 
 
     void NetworkClient::async_read()
-    {
+{
+    auto buffer = std::make_shared<std::vector<char>>(128);
 
-        auto buf = std::make_shared<boost::asio::streambuf>();
-
-        boost::asio::async_read_until(
-            socket_, *buf, '\n',
-            [this, buf](const boost::system::error_code &error, std::size_t /*bytes_transferred*/)
+    boost::asio::async_read(
+        socket_,
+        boost::asio::buffer(*buffer),
+        [this, buffer](const boost::system::error_code& ec, std::size_t bytes_transferred)
+        {
+            if (!ec)
             {
-                if (!error)
-                {
-                    std::istream is(buf.get());
-                    std::string line;
-                    std::getline(is, line);
+                buffer->resize(bytes_transferred);
+                auto coords = deserialize_pairs(*buffer);
 
-                    std::cout << "Received: " << line << std::endl;
+                if (!coords.empty()) {
+                    for (auto& [x, y] : coords)
+                        std::cout << "(" << x << ", " << y << ") ";
+                    std::cout << std::endl;
+                }
 
-                    // Start another read:
-                    async_read();
-                }
-                else
-                {
-                    std::cerr << "Read error: " << error.message() << std::endl;
-                }
-            });
-    }
+                async_read();
+            }
+            else
+            {
+                std::cerr << "Read error: " << ec.message() << std::endl;
+            }
+        }
+    );
+}
 
 

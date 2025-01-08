@@ -20,7 +20,7 @@ $(TARGET): $(OBJECTS) | $(BIN_DIR)
 
 
 $(OBJ_DIR)/%.o: %.cpp | $(OBJ_DIR)
-	@mkdir -p $(dir $@)            # Ensures obj/whatever/ subdir exists
+	@mkdir -p $(dir $@)          
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 
