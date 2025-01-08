@@ -5,6 +5,7 @@
 
 #include "game.hpp"
 #include "render.hpp"
+#include "serialize.hpp"
 
 
 Node node {
@@ -192,6 +193,22 @@ void Game::revealCell(int row, int col) {
     }
 }
 
+std::vector<std::pair<int, int>> Game::returnRevealed() {
+    std::vector<std::pair<int, int>> revealedCoordinates;
+
+    for (size_t i = 0; i < grid.size(); ++i) {
+        for (size_t j = 0; j < grid[i].size(); ++j) {
+            if (grid[i][j].isRevealed) {
+                revealedCoordinates.emplace_back(i, j);
+            }
+        }
+    }
+
+    return revealedCoordinates;
+}
+
+
+
 
 void Game::createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps &mouseProps, GameAssets &assets, Draw& draw){
     for (size_t i = 0; i < grid.size(); i++) {
@@ -206,13 +223,17 @@ void Game::createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps 
                     grid[i][j].isFlagged = !grid[i][j].isFlagged;
                     mouseProps.rightClicked = false;
                 }
-                
             }
-            if ((mouseProps.cellIsClicked = cellClicked(mouseProps.mouseX, mouseProps.mouseY, cell_x, cell_y)))
-            {
-                std::array<int, 2> coordinates = {cell_x, cell_y};
-                client.send_message(coordinates);
-            };
+
+            std::vector<std::pair<int, int>> revealed = returnRevealed();
+            if (!revealed.empty()) {
+                std::vector<char> serialized = serialize_pairs(revealed);
+                client.send_message(serialized);
+            }
+            
+
+            mouseProps.cellIsClicked = cellClicked(mouseProps.mouseX, mouseProps.mouseY, cell_x, cell_y);
+
             // Pass current cell to cell for rendering
             Node &currentCell = grid[i][j];
             mouseProps.released = cellClicked(mouseProps.mouseXr, mouseProps.mouseYr, cell_x, cell_y);

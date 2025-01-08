@@ -37,6 +37,7 @@ private:
     std::array<Point, 8> returnSurrounding(int row, int col) const;
     void clearMines();
     void plantMines();
+    std::vector<std::pair<int, int>> returnRevealed();
 public:
     Game(int rows, int cols, int numMines);
     
