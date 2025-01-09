@@ -37,7 +37,6 @@ void Game::initialize() {
 
 Game::Game(int rows, int cols, int numMines)
     : rows(rows), cols(cols), numMines(numMines) {
-    std::srand(std::time(nullptr));
     initialize();
     safeCells = rows * cols - numMines;
     revealedCells = 0;

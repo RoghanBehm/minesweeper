@@ -40,6 +40,9 @@ int main() {
     }
 
     // Initialize game objects
+    while (!globalSettings.seed_received) {
+        
+    }
     Game game(16, 30, 100);
     Draw draw;
     GameAssets assets;
