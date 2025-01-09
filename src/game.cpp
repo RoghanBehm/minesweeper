@@ -226,7 +226,7 @@ void Game::createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps 
             }
 
             std::vector<std::pair<int, int>> revealed = returnRevealed();
-            if (!revealed.empty()) {
+            if (globalSettings.seed_received && !revealed.empty()) {
                 std::vector<char> serialized = serialize_pairs(revealed);
                 client.send_message(serialized);
             }

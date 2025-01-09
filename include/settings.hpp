@@ -10,6 +10,7 @@ struct Settings {
     bool game_over;
     bool first_click;
     bool regenerate;
+    bool seed_received;
 };
 
 extern Settings globalSettings;

@@ -8,7 +8,8 @@ Settings globalSettings = {
     .reset_button_width = 40,
     .game_over = false,
     .first_click = true,
-    .regenerate = false
+    .regenerate = false,
+    .seed_received = false
 };
 
 

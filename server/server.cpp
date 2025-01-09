@@ -59,8 +59,8 @@ private:
 class tcp_server
 {
 public:
-    tcp_server(boost::asio::io_context& io_context)
-        : io_context_(io_context), acceptor_(io_context, tcp::endpoint(tcp::v4(), 8000))
+    tcp_server(boost::asio::io_context& io_context, int seed)
+        : io_context_(io_context), acceptor_(io_context, tcp::endpoint(tcp::v4(), 8000)), seed_(seed)
     {
         start_accept();
     }
@@ -96,6 +96,10 @@ private:
                 if (!error)
                 {
                     std::cout << "New client connected!" << std::endl;
+
+                    std::vector<char> serialized_seed = serialize_seed(seed_);
+                    new_connection->send_message(serialized_seed);
+
                     add_client(new_connection);
                     new_connection->start();
                 }
@@ -103,6 +107,7 @@ private:
             });
     }
 
+    int seed_;
     boost::asio::io_context& io_context_;
     tcp::acceptor acceptor_;
     std::vector<std::shared_ptr<tcp_connection>> clients_;
@@ -110,40 +115,38 @@ private:
 
 void tcp_connection::do_read()
 {
-    // Allocate a vector of 128 bytes (or bigger if you anticipate more).
     auto message = std::make_shared<std::vector<char>>(128);
 
-    // Now read *up to* 128 bytes
     auto self = shared_from_this();
-    boost::asio::async_read(
-        socket_,
-        boost::asio::buffer(*message),
-        [this, self, message](const boost::system::error_code& error, std::size_t bytes_transferred)
+socket_.async_read_some(
+    boost::asio::buffer(*message),
+    [this, self, message](const boost::system::error_code& error, std::size_t bytes_transferred)
+    {
+        if (!error)
         {
-            if (!error)
-            {
-                message->resize(bytes_transferred);
+            message->resize(bytes_transferred);
 
-                auto deserialized_coords = deserialize_pairs(*message);
-                if (!deserialized_coords.empty())
-                {
-                    std::cout << "Received coordinates: ";
-                    for (auto& [x, y] : deserialized_coords)
-                        std::cout << "(" << x << ", " << y << ") ";
-                    std::cout << std::endl;
-                }
+            auto deserialized_coords = deserialize_pairs(*message);
+            if (!deserialized_coords.empty())
+            {
+                std::cout << "Received coordinates: ";
+                for (auto& [x, y] : deserialized_coords)
+                    std::cout << "(" << x << ", " << y << ") ";
+                std::cout << std::endl;
 
                 server_.broadcast_message(*message, self);
+            }
 
-                do_read();
-            }
-            else
-            {
-                std::cout << "Client disconnected." << std::endl;
-                server_.remove_client(self);
-            }
+            do_read(); // keep reading
         }
-    );
+        else
+        {
+            std::cout << "Client disconnected." << std::endl;
+            server_.remove_client(self);
+        }
+    }
+);
+
 }
 
 
@@ -151,11 +154,12 @@ void tcp_connection::do_read()
 
 int main()
 {
+    int seed = std::time(nullptr);
     try
     {
         boost::asio::io_context io_context;
 
-        tcp_server server(io_context);
+        tcp_server server(io_context, seed);
 
         io_context.run();
     }
