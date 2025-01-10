@@ -1,6 +1,8 @@
 #include "settings.hpp"
 
 Settings globalSettings = {
+    .window_width = 900,
+    .window_height = 800,
     .cell_size = 30,
     .menu_height = 90,
     .menu_width = 900,

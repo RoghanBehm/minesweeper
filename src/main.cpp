@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <SDL_image.h>
 #include "settings.hpp"
 #include "game.hpp"
@@ -40,10 +41,8 @@ int main() {
     }
 
     // Initialize game objects
-    while (!globalSettings.seed_received) {
-        
-    }
-    Game game(16, 30, 100);
+    while (!globalSettings.seed_received) {};
+    Game game(16, 30, 10);
     Draw draw;
     GameAssets assets;
     MouseProps mouseProps;
@@ -63,6 +62,20 @@ int main() {
     const int frameDelay = 1000 / 60;
     Uint32 frameStart = SDL_GetTicks();
 
+    if (TTF_Init() == -1) {
+        std::cerr << "Failed to initialize SDL_ttf: " << TTF_GetError() << std::endl;
+        return 1;
+    }
+
+
+    std::string basePath(SDL_GetBasePath());
+    std::string fontPath = basePath + "../fonts/Helvetica.ttf";
+
+    TTF_Font *font = TTF_OpenFont(fontPath.c_str(), 24);
+    if (!font) {
+        std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
+        return 1;
+    }
 
     while (running) {
         // Handle events
@@ -117,7 +130,8 @@ int main() {
         // Render game grid
         game.createGrid(renderer, client, mouseProps, assets, draw);
         if (game.checkWin()) {
-            std::cout << "winnnnnna";
+            draw.blackFilter(renderer);
+            draw.Popup(renderer, font, "You wonnered!");
         }
 
         SDL_RenderPresent(renderer);
@@ -130,6 +144,7 @@ int main() {
     // Clean
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    TTF_Quit();
     SDL_Quit();
 
     return 0;

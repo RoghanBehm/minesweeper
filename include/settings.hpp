@@ -2,6 +2,8 @@
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
 struct Settings {
+    int window_width;
+    int window_height;
     int cell_size;
     int menu_height;
     int menu_width;

@@ -61,7 +61,7 @@ void NetworkClient::read_seed()
                 }
                 else
                 {
-                    std::cerr << "Expected Seed message, got something else.\n";
+                    std::cerr << "Expected seed message, got something else.\n";
                 }
 
                 if (!ec && bytes_transferred == 8)

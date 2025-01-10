@@ -152,12 +152,38 @@ void Draw::menu(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &relea
 
     if (released) {
         globalSettings.regenerate = true;
-        std::cout << "dsadas";
         SDL_SetRenderDrawColor(renderer, 0, 10, 103, 0);
         SDL_RenderFillRect(renderer, &reset_button);
     }
 
             
+}
+
+void Draw::blackFilter(SDL_Renderer *renderer)
+{
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
+    SDL_Rect darkenRect = {0, 0, globalSettings.window_width, globalSettings.window_height};
+    SDL_RenderFillRect(renderer, &darkenRect);
+}
+
+void Draw::Popup(SDL_Renderer *renderer, TTF_Font *font, const char *message) {
+
+    SDL_Rect popupRect = {globalSettings.window_width / 4, globalSettings.window_height / 4, globalSettings.window_width / 2, globalSettings.window_height / 2};
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderFillRect(renderer, &popupRect);
+
+    SDL_Color textColor = {0, 0, 0, 255};
+    SDL_Surface *textSurface = TTF_RenderText_Solid(font, message, textColor);
+    SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+
+    int textWidth = textSurface->w;
+    int textHeight = textSurface->h;
+    SDL_Rect textRect = {popupRect.x + (popupRect.w - textWidth) / 2, 
+                         popupRect.y + (popupRect.h - textHeight) / 2, 
+                         textWidth, textHeight};
+    SDL_FreeSurface(textSurface);
+    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+    SDL_DestroyTexture(textTexture);
 }
 
 
