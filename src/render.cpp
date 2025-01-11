@@ -161,10 +161,22 @@ void Draw::menu(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &relea
 
 void Draw::blackFilter(SDL_Renderer *renderer)
 {
+    SDL_Texture *filter = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, globalSettings.window_width, globalSettings.window_height);
+
+    if (!filter) {
+        std::cerr << "Failed to create texture for black filter: " << SDL_GetError() << std::endl;
+        return;
+    }
+
+    SDL_SetTextureBlendMode(filter, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderTarget(renderer, filter);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
-    SDL_Rect darkenRect = {0, 0, globalSettings.window_width, globalSettings.window_height};
-    SDL_RenderFillRect(renderer, &darkenRect);
+    SDL_RenderClear(renderer);
+    SDL_SetRenderTarget(renderer, NULL);
+    SDL_RenderCopy(renderer, filter, NULL, NULL);
+    SDL_DestroyTexture(filter);
 }
+
 
 void Draw::Popup(SDL_Renderer *renderer, TTF_Font *font, const char *message) {
 
