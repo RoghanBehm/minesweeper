@@ -25,7 +25,9 @@ int main() {
     SDL_Window *window = SDL_CreateWindow("Minesweeper",
                                           SDL_WINDOWPOS_CENTERED,
                                           SDL_WINDOWPOS_CENTERED,
-                                          900, 800, SDL_WINDOW_SHOWN);
+                                          globalSettings.window_width,
+                                          globalSettings.window_height,
+                                          SDL_WINDOW_SHOWN);
     if (!window) {
         SDL_Log("Failed to create window: %s", SDL_GetError());
         SDL_Quit();
@@ -38,6 +40,12 @@ int main() {
         SDL_DestroyWindow(window);
         SDL_Quit();
         return 1;
+    }
+
+    SDL_RenderSetLogicalSize(renderer, globalSettings.window_width, globalSettings.window_height);
+
+    if (SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP) != 0) {
+        std::cerr << "SDL_SetWindowFullscreen Error: " << SDL_GetError() << std::endl;
     }
 
     // Initialize game objects
@@ -82,6 +90,12 @@ int main() {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 running = false;
+            }
+            if (event.type == SDL_KEYDOWN) {
+                if (event.key.keysym.sym == SDLK_f) {
+                    Uint32 fullscreen_flag = SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN_DESKTOP;
+                    SDL_SetWindowFullscreen(window, fullscreen_flag ? 0 : SDL_WINDOW_FULLSCREEN_DESKTOP);
+                }
             } else {
                 if (event.type == SDL_MOUSEBUTTONDOWN) {
                     if (event.button.button == SDL_BUTTON_RIGHT) {
