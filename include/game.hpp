@@ -44,7 +44,7 @@ public:
     void reset();
     int checkSurrounding(int row, int col) const;
     void revealBlanks(int row, int col);
-    void createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps &mouseProps, GameAssets &assets, Draw& draw);
+    void createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps &mouseProps, GameAssets &assets, Draw& draw, int offset);
     bool checkWin();
     void revealCell(int row, int col);
 };

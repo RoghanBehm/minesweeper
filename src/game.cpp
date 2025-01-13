@@ -209,10 +209,11 @@ std::vector<std::pair<int, int>> Game::returnRevealed() {
 
 
 
-void Game::createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps &mouseProps, GameAssets &assets, Draw& draw){
+void Game::createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps &mouseProps, GameAssets &assets, Draw& draw, int offset)
+{
     for (size_t i = 0; i < grid.size(); i++) {
         for (size_t j = 0; j < grid[i].size(); ++j) {
-            int cell_x = j * globalSettings.cell_size;
+            int cell_x = j * globalSettings.cell_size + offset;
             int cell_y = i * globalSettings.cell_size + globalSettings.menu_height;
 
             // Handle right-click toggle
