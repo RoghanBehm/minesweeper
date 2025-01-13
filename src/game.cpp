@@ -193,6 +193,16 @@ void Game::revealCell(int row, int col) {
     }
 }
 
+void Game::revealEnemyCells(int row, int col, std::vector<std::pair<int, int>> coords) {
+    for (size_t i = 0; i < enemy_grid.size(); i++) {
+        for (size_t i = 0; i < enemy_grid[i].size(); i++) {
+            for (auto[x, y] : coords) {
+                enemy_grid[x][y].isRevealed = true;
+            }
+        }
+    }
+}
+
 std::vector<std::pair<int, int>> Game::returnRevealed() {
     std::vector<std::pair<int, int>> revealedCoordinates;
 
@@ -235,7 +245,7 @@ void Game::createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps 
 
             mouseProps.cellIsClicked = cellClicked(mouseProps.mouseX, mouseProps.mouseY, cell_x, cell_y);
 
-            // Pass current cell to cell for rendering
+            // Pass current cell to draw.cell for rendering
             Node &currentCell = grid[i][j];
             mouseProps.released = cellClicked(mouseProps.mouseXr, mouseProps.mouseYr, cell_x, cell_y);
             int surroundingMines = checkSurrounding(i, j);

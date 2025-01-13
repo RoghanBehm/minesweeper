@@ -45,6 +45,7 @@ public:
     void reset();
     int checkSurrounding(int row, int col) const;
     void revealBlanks(int row, int col);
+    void revealEnemyCells(int row, int col, std::vector<std::pair<int, int>> coords);
     void createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps &mouseProps, GameAssets &assets, Draw& draw, int offset);
     void createEnemyGrid(SDL_Renderer *renderer, MouseProps &mouseProps, GameAssets &assets, Draw& draw, int offset);
     bool checkWin();
