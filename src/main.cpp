@@ -141,12 +141,10 @@ int main() {
         // Render menu
         draw.menu(renderer, reset_x, reset_y, reset_clicked, reset_released);
 
-        // Render player grid
+        // Render player grids
         game.createGrid(renderer, client, mouseProps, assets, draw, 0);
+        game.createEnemyGrid(renderer, mouseProps, assets, draw, 960);
 
-        // Render enemy grid
-        game.createGrid(renderer, client, mouseProps, assets, draw, 960);
-        
         if (game.checkWin()) {
             draw.blackFilter(renderer);
             draw.Popup(renderer, font, "You wonnered!");

@@ -28,6 +28,7 @@ private:
     int rows;
     int cols;
     std::vector<std::vector<Node>> grid;
+    std::vector<std::vector<Node>> enemy_grid;
     int numMines;
     int safeCells;
     int revealedCells;
@@ -45,6 +46,7 @@ public:
     int checkSurrounding(int row, int col) const;
     void revealBlanks(int row, int col);
     void createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps &mouseProps, GameAssets &assets, Draw& draw, int offset);
+    void createEnemyGrid(SDL_Renderer *renderer, MouseProps &mouseProps, GameAssets &assets, Draw& draw, int offset);
     bool checkWin();
     void revealCell(int row, int col);
 };

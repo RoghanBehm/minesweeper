@@ -30,6 +30,7 @@ void Game::reset() {
 void Game::initialize() {
 
     grid = std::vector<std::vector<Node>>(rows, std::vector<Node>(cols));
+    enemy_grid = std::vector<std::vector<Node>>(rows, std::vector<Node>(cols));
     globalSettings.game_over = false;
     plantMines();
 
@@ -249,3 +250,24 @@ void Game::createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps 
     }
 }
 
+
+void Game::createEnemyGrid(SDL_Renderer *renderer, MouseProps &mouseProps, GameAssets &assets, Draw& draw, int offset)
+{
+    for (size_t i = 0; i < enemy_grid.size(); i++) {
+        for (size_t j = 0; j < enemy_grid[i].size(); ++j) {
+            int cell_x = j * globalSettings.cell_size + offset;
+            int cell_y = i * globalSettings.cell_size + globalSettings.menu_height;            
+
+            // Pass current cell to cell for rendering
+            Node &currentCell = enemy_grid[i][j];
+            int surroundingMines = checkSurrounding(i, j);
+            draw.cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell, *this, assets, surroundingMines, i, j);
+
+
+            // If current cell does not contain mine, reveal neighbouring cells if none contain mines
+            if (currentCell.isRevealed && !currentCell.hasMine && !globalSettings.regenerate) {
+                revealBlanks(i, j);
+            }
+        }
+    }
+}
