@@ -23,6 +23,7 @@ bool cellClicked(int x, int y, int cell_x, int cell_y)
 }
 void Game::reset() {
 
+    alreadySent_.clear();
     initialize();
 
 }
@@ -224,6 +225,23 @@ std::vector<std::pair<int, int>> Game::returnRevealed() {
 }
 
 
+void Game::sendNewReveals(NetworkClient &client)
+{
+    auto allRevealed = returnRevealed();
+
+    std::vector<std::pair<int, int>> newlyRevealed;
+    for (auto &rc : allRevealed) {
+        if (!alreadySent_.count(rc)) {
+            newlyRevealed.push_back(rc);
+            alreadySent_.insert(rc);
+        }
+    }
+
+    if (!newlyRevealed.empty()) {
+        auto serialized = serialize_pairs(newlyRevealed);
+        client.send_message(serialized);
+    }
+}
 
 
 void Game::createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps &mouseProps, GameAssets &assets, Draw& draw)
@@ -242,13 +260,6 @@ void Game::createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps 
                 }
             }
 
-            std::vector<std::pair<int, int>> revealed = returnRevealed();
-            if (globalSettings.seed_received && !revealed.empty()) {
-                std::vector<char> serialized = serialize_pairs(revealed);
-                client.send_message(serialized);
-            }
-            
-
             mouseProps.cellIsClicked = cellClicked(mouseProps.mouseX, mouseProps.mouseY, cell_x, cell_y);
 
             // Pass current cell to draw.cell for rendering
@@ -263,6 +274,10 @@ void Game::createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps 
                 revealBlanks(i, j);
             }
         }
+    }
+    if (globalSettings.seed_received) 
+    {
+        sendNewReveals(client);
     }
 }
 

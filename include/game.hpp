@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <array>
+#include <set>
 #include <SDL2/SDL.h>
 #include <ctime>
 #include "mouseProps.hpp"
@@ -32,7 +33,7 @@ private:
     int numMines;
     int safeCells;
     int revealedCells;
-
+    std::set<std::pair<int,int>> alreadySent_;
     void initialize();
     void revealBlock(int row, int col);
     std::array<Point, 8> returnSurrounding(int row, int col) const;
@@ -40,6 +41,7 @@ private:
     void plantMines();
     std::vector<std::pair<int, int>> returnRevealed();
     bool isLegitEnemyCell(size_t row, size_t col);
+    void sendNewReveals(NetworkClient &client);
 public:
     Game(int rows, int cols, int numMines);
     
