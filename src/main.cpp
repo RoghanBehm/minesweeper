@@ -50,7 +50,7 @@ int main() {
 
     // Initialize game objects
     while (!globalSettings.seed_received) {};
-    Game game(16, 30, 10);
+    Game game(16, 30, 100);
     Draw draw;
     GameAssets assets;
     MouseProps mouseProps;
@@ -137,13 +137,14 @@ int main() {
             globalSettings.first_click = true;
         }
         
+        auto board = client.return_board();
 
         // Render menu
         draw.menu(renderer, reset_x, reset_y, reset_clicked, reset_released);
 
         // Render player grids
-        game.createGrid(renderer, client, mouseProps, assets, draw, 0);
-        game.createEnemyGrid(renderer, mouseProps, assets, draw, 960);
+        game.createGrid(renderer, client, mouseProps, assets, draw);
+        game.createEnemyGrid(renderer, mouseProps, assets, draw, board);
 
         if (game.checkWin()) {
             draw.blackFilter(renderer);

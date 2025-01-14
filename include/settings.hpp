@@ -13,6 +13,7 @@ struct Settings {
     bool first_click;
     bool regenerate;
     bool seed_received;
+    bool coords_received;
 };
 
 extern Settings globalSettings;

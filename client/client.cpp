@@ -96,12 +96,13 @@ void NetworkClient::async_read()
 
                     if (type == MessageType::Coordinates)
                     {
-                        auto coords = deserialize_pairs(
+                        coords = deserialize_pairs(
                             std::vector<char>(buffer->begin() + sizeof(MessageType),
                                               buffer->end()));
 
                         if (!coords.empty())
                         {
+                            globalSettings.coords_received = true;
                             for (auto &[x, y] : coords)
                                 std::cout << "(" << x << ", " << y << ") ";
                             std::cout << std::endl;
@@ -119,5 +120,11 @@ void NetworkClient::async_read()
                 std::cerr << "Read error (coords): " << ec.message() << std::endl;
             }
         });
+}
+
+std::vector<std::pair<int,int>> NetworkClient::return_board()
+{
+    globalSettings.coords_received = false;
+    return coords; 
 }
 

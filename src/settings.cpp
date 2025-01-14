@@ -11,7 +11,8 @@ Settings globalSettings = {
     .game_over = false,
     .first_click = true,
     .regenerate = false,
-    .seed_received = false
+    .seed_received = false,
+    .coords_received = false
 };
 
 

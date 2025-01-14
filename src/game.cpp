@@ -193,15 +193,21 @@ void Game::revealCell(int row, int col) {
     }
 }
 
-void Game::revealEnemyCells(int row, int col, std::vector<std::pair<int, int>> coords) {
-    for (size_t i = 0; i < enemy_grid.size(); i++) {
-        for (size_t i = 0; i < enemy_grid[i].size(); i++) {
-            for (auto[x, y] : coords) {
-                enemy_grid[x][y].isRevealed = true;
-            }
+bool Game::isLegitEnemyCell(size_t row, size_t col) {
+    return row < enemy_grid.size() && col < enemy_grid[row].size();
+}
+
+
+
+
+void Game::revealEnemyCells(const std::vector<std::pair<int, int>>& coords) {
+    for (auto [x, y] : coords) {
+        if (isLegitEnemyCell(x, y)) {
+            enemy_grid[x][y].isRevealed = true;
         }
     }
 }
+
 
 std::vector<std::pair<int, int>> Game::returnRevealed() {
     std::vector<std::pair<int, int>> revealedCoordinates;
@@ -220,11 +226,11 @@ std::vector<std::pair<int, int>> Game::returnRevealed() {
 
 
 
-void Game::createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps &mouseProps, GameAssets &assets, Draw& draw, int offset)
+void Game::createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps &mouseProps, GameAssets &assets, Draw& draw)
 {
     for (size_t i = 0; i < grid.size(); i++) {
         for (size_t j = 0; j < grid[i].size(); ++j) {
-            int cell_x = j * globalSettings.cell_size + offset;
+            int cell_x = j * globalSettings.cell_size;
             int cell_y = i * globalSettings.cell_size + globalSettings.menu_height;
 
             // Handle right-click toggle
@@ -261,23 +267,21 @@ void Game::createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps 
 }
 
 
-void Game::createEnemyGrid(SDL_Renderer *renderer, MouseProps &mouseProps, GameAssets &assets, Draw& draw, int offset)
+void Game::createEnemyGrid(SDL_Renderer *renderer, MouseProps &mouseProps, GameAssets &assets, Draw& draw, std::vector<std::pair<int, int>> coords)
 {
+
+    revealEnemyCells(coords);
     for (size_t i = 0; i < enemy_grid.size(); i++) {
         for (size_t j = 0; j < enemy_grid[i].size(); ++j) {
+            int offset = 960;
             int cell_x = j * globalSettings.cell_size + offset;
             int cell_y = i * globalSettings.cell_size + globalSettings.menu_height;            
 
             // Pass current cell to cell for rendering
             Node &currentCell = enemy_grid[i][j];
-            int surroundingMines = checkSurrounding(i, j);
+            int surroundingMines = 0; // Disable mine check for enemy grid
+            
             draw.cell(renderer, cell_x, cell_y, mouseProps.cellIsClicked, mouseProps.released, currentCell, *this, assets, surroundingMines, i, j);
-
-
-            // If current cell does not contain mine, reveal neighbouring cells if none contain mines
-            if (currentCell.isRevealed && !currentCell.hasMine && !globalSettings.regenerate) {
-                revealBlanks(i, j);
-            }
         }
     }
 }
