@@ -11,10 +11,15 @@
 #include <boost/asio.hpp>
 #include "../client/client.hpp"
 
-int main() {
-    
+int main(int argc, char*argv[]) {
+    if (argc != 3) {
+        std::cout << "Incorrect usage: ./minesweeper <IP_Address> <Port>" << std::endl;
+        return 0;
+    }
+    std::cout << argv[1] << argv[2] << std::endl;
+
     boost::asio::io_context io_context;
-    NetworkClient client(io_context, "localhost", "8000");
+    NetworkClient client(io_context, argv[1], argv[2]);
     std::thread io_thread([&io_context]() { io_context.run(); });
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {

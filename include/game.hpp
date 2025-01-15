@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-#include <string>
 #include <array>
 #include <set>
 #include <SDL2/SDL.h>

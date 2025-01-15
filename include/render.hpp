@@ -2,12 +2,13 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 #include "game.hpp"
 #include "settings.hpp"
-#include "render.hpp"
+
 
 constexpr int thickness = 3;
-constexpr int inset = 1.5;
+constexpr int inset = 1;
 
 struct Node;
 

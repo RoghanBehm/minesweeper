@@ -1,11 +1,11 @@
 #include <iostream>
 #include <string>
-#include <array>
 #include <vector>
 #include <memory>
 #include <algorithm>
 #include <boost/asio.hpp>
 #include "../include/serialize.hpp"
+#include "serverIP.hpp"
 
 using boost::asio::ip::tcp;
 
@@ -35,7 +35,7 @@ public:
     {
         auto self = shared_from_this();
         boost::asio::async_write(socket_, boost::asio::buffer(message),
-            [this, self](const boost::system::error_code& error, std::size_t /*bytes_transferred*/) {
+            [self](const boost::system::error_code& error, std::size_t /*bytes_transferred*/) {
                 if (error)
                 {
                     std::cout << "Error sending coordinates: " << error.message() << std::endl;
@@ -53,14 +53,13 @@ private:
 
     tcp_server& server_;
     tcp::socket socket_;
-    std::array<char, 128> buffer_;
 };
 
 class tcp_server
 {
 public:
     tcp_server(boost::asio::io_context& io_context, int seed)
-        : io_context_(io_context), acceptor_(io_context, tcp::endpoint(tcp::v4(), 8000)), seed_(seed)
+        : seed_(seed), io_context_(io_context), acceptor_(io_context, tcp::endpoint(tcp::v4(), 8000))
     {
         start_accept();
     }
@@ -161,7 +160,16 @@ int main()
 
         tcp_server server(io_context, seed);
 
+        std::string addr = getPublicIPviaBeast();
+        if (!addr.empty()) {
+            std::cout << addr << std::endl;
+        } else {
+            std::cout << "Failed to retrieve public IP." << std::endl;
+        }
+
         io_context.run();
+
+
     }
     catch (const std::exception& e)
     {
