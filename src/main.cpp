@@ -6,7 +6,6 @@
 #include "game.hpp"
 #include "render.hpp"
 #include "mouseProps.hpp"
-#include <array>
 #include <string>
 #include <boost/asio.hpp>
 #include "../client/client.hpp"

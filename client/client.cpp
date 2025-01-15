@@ -100,6 +100,11 @@ void NetworkClient::async_read()
                             std::vector<char>(buffer->begin() + sizeof(MessageType),
                                               buffer->end()));
 
+                        std::cout << "Received coords: ";
+                        for (auto& [x, y] : coords)
+                        std::cout << "(" << x << ", " << y << ") ";
+                        std::cout << std::endl;
+
                         if (!coords.empty())
                         {
                             globalSettings.coords_received = true;
