@@ -1,0 +1,21 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-Wall",
+      "-Wextra",
+      "-std=c++17",
+      "-g",
+      "-I./include",
+      "-I/usr/include/SDL2",
+      "-D_REENTRANT",
+      "-c",
+      "-o",
+      "obj/src/main.o",
+      "src/main.cpp"
+    ],
+    "directory": "/home/roghan/repo/minesweeper",
+    "file": "/home/roghan/repo/minesweeper/src/main.cpp",
+    "output": "/home/roghan/repo/minesweeper/obj/src/main.o"
+  }
+]

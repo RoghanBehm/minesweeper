@@ -1,8 +1,5 @@
 #include <vector>
-#include <iostream>
 #include <array>
-
-
 #include "game.hpp"
 #include "render.hpp"
 #include "serialize.hpp"
@@ -133,7 +130,7 @@ std::array<Point, 8> Game::returnSurrounding(int row, int col) const {
     return nearby;
 }
 
-void Game::revealBlock(int row, int col) {
+void Game::revealBlock(int row, int col, std::vector<std::pair<int,int>> &newReveals) {
 
     const int directions[8][2] = {
         {-1, 0},  {1, 0},  {0, -1},  {0, 1},
@@ -143,6 +140,7 @@ void Game::revealBlock(int row, int col) {
     if (!grid[row][col].isRevealed) {
         grid[row][col].isRevealed = true;
         revealedCells++;
+        newReveals.emplace_back(row, col);
     }
     
 
@@ -154,6 +152,7 @@ void Game::revealBlock(int row, int col) {
             if (!grid[newRow][newCol].isRevealed) {
                 grid[newRow][newCol].isRevealed = true;
                 revealedCells++; 
+                newReveals.emplace_back(newRow, newCol);
             }
         }
     }
@@ -170,7 +169,7 @@ bool Game::checkWin() {
 void Game::revealBlanks(int row, int col) {
     // If there are no surrounding mines, reveal neighbors and cascade until no safe mines left
     if (!checkSurrounding(row, col)){
-        revealBlock(row, col);
+        revealBlock(row, col, cascadeRevealed);
 
         std::array<Point, 8> surrounding = returnSurrounding(row, col);
         for (const auto &point : surrounding) {
@@ -236,12 +235,26 @@ void Game::sendNewReveals(NetworkClient &client)
             alreadySent_.insert(rc);
         }
     }
+    std::vector<std::pair<int, int>> combined;
+    combined.reserve(newlyRevealed.size() + cascadeRevealed.size());
 
-    if (!newlyRevealed.empty()) {
-        auto serialized = serialize_pairs(newlyRevealed);
+    combined.insert(combined.end(), newlyRevealed.begin(), newlyRevealed.end());
+
+    for (auto &rc : cascadeRevealed) {
+        if (!alreadySent_.count(rc)) {
+            combined.push_back(rc);
+            alreadySent_.insert(rc);
+        }
+    }
+
+    cascadeRevealed.clear();
+
+    if (!combined.empty()) {
+        auto serialized = serialize_pairs(combined);
         client.send_message(serialized);
     }
 }
+
 
 
 void Game::createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps &mouseProps, GameAssets &assets, Draw& draw)

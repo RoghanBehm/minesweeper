@@ -1,6 +1,4 @@
 #include <iostream>
-#include <string>
-#include <array>
 #include <vector>
 #include <memory>
 #include <algorithm>
@@ -53,14 +51,13 @@ private:
 
     tcp_server& server_;
     tcp::socket socket_;
-    std::array<char, 128> buffer_;
 };
 
 class tcp_server
 {
 public:
     tcp_server(boost::asio::io_context& io_context, int seed)
-        : io_context_(io_context), acceptor_(io_context, tcp::endpoint(tcp::v4(), 8000)), seed_(seed)
+        : seed_(seed), io_context_(io_context), acceptor_(io_context, tcp::endpoint(tcp::v4(), 8000))
     {
         start_accept();
     }

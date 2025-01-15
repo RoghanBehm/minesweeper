@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-#include <string>
 #include <array>
 #include <set>
 #include <SDL2/SDL.h>
@@ -34,8 +33,9 @@ private:
     int safeCells;
     int revealedCells;
     std::set<std::pair<int,int>> alreadySent_;
+    std::vector<std::pair<int,int>> cascadeRevealed;
     void initialize();
-    void revealBlock(int row, int col);
+    void revealBlock(int row, int col, std::vector<std::pair<int,int>> &newReveals);
     std::array<Point, 8> returnSurrounding(int row, int col) const;
     void clearMines();
     void plantMines();
