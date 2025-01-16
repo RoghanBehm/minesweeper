@@ -6,9 +6,17 @@
 
 std::vector<char> serialize_pairs(const std::vector<std::pair<int, int>>& coords)
 {
-    std::vector<char> buffer(sizeof(MessageType) + coords.size() * 2 * sizeof(int));
+    // Calculate sizes
+    uint32_t body_size = sizeof(MessageType) + coords.size() * 2 * sizeof(int);
+    uint32_t total_size = sizeof(uint32_t) + body_size;
+
+    std::vector<char> buffer(total_size);
     char* ptr = buffer.data();
 
+    //Prefix length
+    std::memcpy(ptr, &body_size, sizeof(uint32_t));
+    ptr += sizeof(uint32_t);
+    
     MessageType type = MessageType::Coordinates;
     std::memcpy(ptr, &type, sizeof(MessageType));
     ptr += sizeof(MessageType);
@@ -23,6 +31,7 @@ std::vector<char> serialize_pairs(const std::vector<std::pair<int, int>>& coords
 
     return buffer;
 }
+
 
 std::vector<std::pair<int, int>> deserialize_pairs(const std::vector<char>& buffer)
 {

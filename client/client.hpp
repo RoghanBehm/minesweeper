@@ -12,5 +12,7 @@ private:
     void async_read();
     boost::asio::ip::tcp::socket socket_;
     std::vector<std::pair<int, int>> coords;
+    std::vector<std::pair<int, int>> all_coords;
+    std::vector<char> incoming_data_;
     
 };

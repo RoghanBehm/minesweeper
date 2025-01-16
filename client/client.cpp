@@ -83,53 +83,73 @@ void NetworkClient::async_read()
     auto buffer = std::make_shared<std::vector<char>>(128);
     socket_.async_read_some(
         boost::asio::buffer(*buffer),
-        [this, buffer](const boost::system::error_code &ec, std::size_t bytes_transferred)
+        [this, buffer](const boost::system::error_code& ec, std::size_t bytes_transferred)
         {
             if (!ec)
             {
-                buffer->resize(bytes_transferred);
+                // Place incoming data in persistent buffer (avoids overwrites)
+                incoming_data_.insert(incoming_data_.end(), buffer->begin(), buffer->begin() + bytes_transferred);
 
-                if (bytes_transferred >= sizeof(MessageType))
+                // Ensure we receive data == to at least the prefix length
+                while (incoming_data_.size() >= sizeof(uint32_t))
                 {
-                    MessageType type;
-                    std::memcpy(&type, buffer->data(), sizeof(MessageType));
+                    uint32_t body_size;
+                    std::memcpy(&body_size, incoming_data_.data(), sizeof(uint32_t));
 
-                    if (type == MessageType::Coordinates)
+                    // Check for full message
+                    if (incoming_data_.size() < sizeof(uint32_t) + body_size)
                     {
-                        coords = deserialize_pairs(
-                            std::vector<char>(buffer->begin() + sizeof(MessageType),
-                                              buffer->end()));
+                        break;
+                    }
 
-                        std::cout << "Received coords: ";
-                        for (auto& [x, y] : coords)
-                        std::cout << "(" << x << ", " << y << ") ";
-                        std::cout << std::endl;
+                    // Extract complete message
+                    std::vector<char> message(incoming_data_.begin() + sizeof(uint32_t),
+                                              incoming_data_.begin() + sizeof(uint32_t) + body_size);
 
-                        if (!coords.empty())
+                    incoming_data_.erase(incoming_data_.begin(),
+                                         incoming_data_.begin() + sizeof(uint32_t) + body_size);
+
+                    // Deserialize message (without prepended body_size and MessageType)
+                    try
+                    {
+                        MessageType type;
+                        std::memcpy(&type, message.data(), sizeof(MessageType));
+                        auto message_data = std::vector<char>(message.begin() + sizeof(MessageType), message.end());
+
+                        if (type == MessageType::Coordinates)
                         {
-                            globalSettings.coords_received = true;
-                            for (auto &[x, y] : coords)
+                            coords = deserialize_pairs(message_data);
+                            all_coords.insert(all_coords.end(), coords.begin(), coords.end());
+
+                            std::cout << "Received coords: ";
+                            for (const auto& [x, y] : coords)
                                 std::cout << "(" << x << ", " << y << ") ";
                             std::cout << std::endl;
                         }
+                        else
+                        {
+                            std::cerr << "Unknown message type\n";
+                        }
                     }
-                    else
+                    catch (const std::exception& e)
                     {
-                        std::cerr << "Got a non-coordinate message type :-|\n";
+                        std::cerr << "Error deserializing message: " << e.what() << std::endl;
                     }
                 }
+
                 async_read();
             }
             else
             {
-                std::cerr << "Read error (coords): " << ec.message() << std::endl;
+                std::cerr << "Read error: " << ec.message() << std::endl;
             }
         });
 }
 
+
 std::vector<std::pair<int,int>> NetworkClient::return_board()
 {
     globalSettings.coords_received = false;
-    return coords; 
+    return all_coords; 
 }
 

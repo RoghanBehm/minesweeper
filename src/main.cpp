@@ -11,10 +11,11 @@
 #include "../client/client.hpp"
 
 int main() {
-    
     boost::asio::io_context io_context;
     NetworkClient client(io_context, "localhost", "8000");
     std::thread io_thread([&io_context]() { io_context.run(); });
+
+    std::vector<std::pair<int, int>> all_coords;
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         SDL_Log("Unable to initialise SDL: %s", SDL_GetError());
@@ -49,7 +50,7 @@ int main() {
 
     // Initialize game objects
     while (!globalSettings.seed_received) {};
-    Game game(16, 30, 100);
+    Game game(16, 30, 5);
     Draw draw;
     GameAssets assets;
     MouseProps mouseProps;
@@ -137,13 +138,17 @@ int main() {
         }
         
         auto board = client.return_board();
+        for (auto x : board) {
+            all_coords.push_back(x);
+        }
+
 
         // Render menu
         draw.menu(renderer, reset_x, reset_y, reset_clicked, reset_released);
 
         // Render player grids
         game.createGrid(renderer, client, mouseProps, assets, draw);
-        game.createEnemyGrid(renderer, mouseProps, assets, draw, board);
+        game.createEnemyGrid(renderer, mouseProps, assets, draw, all_coords);
 
         if (game.checkWin()) {
             draw.blackFilter(renderer);
