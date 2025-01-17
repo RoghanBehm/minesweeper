@@ -155,6 +155,11 @@ int main() {
             draw.Popup(renderer, font, "You wonnered!");
         }
 
+        if (globalSettings.game_over) {
+            draw.blackFilter(renderer);
+            draw.Popup(renderer, font, "You lose!");
+        }
+
         SDL_RenderPresent(renderer);
         Uint32 frameTime = SDL_GetTicks() - frameStart;
         if (frameDelay > frameTime) {
