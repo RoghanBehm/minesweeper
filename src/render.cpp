@@ -32,7 +32,7 @@ void Draw::default_cell(SDL_Renderer *renderer, SDL_Rect rect) {
     SDL_RenderFillRect(renderer, &right);
 }
 
-void Draw::mine_prox_cell(SDL_Renderer *renderer, GameAssets &assets, int nearbyMines, SDL_Rect rect) {
+void Draw::mine_prox_cell(SDL_Renderer *renderer, const GameAssets &assets, int nearbyMines, SDL_Rect rect) {
             switch(nearbyMines) {
             case 1:
                 SDL_RenderCopy(renderer, assets.prox1, NULL, &rect);
@@ -67,7 +67,7 @@ void Draw::mine_prox_cell(SDL_Renderer *renderer, GameAssets &assets, int nearby
         }
 }
 
-void Draw::cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node &cell, Game &game, GameAssets &assets, int nearbyMines, int row, int col) {
+void Draw::cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node &cell, Game &game, const GameAssets &assets, int nearbyMines, int row, int col) {
     SDL_Rect rect = {x, y, globalSettings.cell_size, globalSettings.cell_size};
 
     if (cell.isFlagged) {
@@ -77,9 +77,13 @@ void Draw::cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &relea
     }
 
     if ((globalSettings.game_over && cell.hasMine) && !globalSettings.regenerate) {
-        if (released) {
-            SDL_RenderCopy(renderer, assets.clicked_mine, NULL, &rect);
-            return;
+            if (cell.exploded) {
+                SDL_RenderCopy(renderer, assets.clicked_mine, NULL, &rect);
+                return;
+            }
+            if (released) {
+            game.setExploded(row, col);
+
         }
         SDL_RenderCopy(renderer, assets.mine, NULL, &rect);
         return;

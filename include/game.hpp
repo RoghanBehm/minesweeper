@@ -12,6 +12,7 @@ struct Node {
     bool hasMine;
     bool isRevealed;
     bool isFlagged;
+    bool exploded;
     int adjacentMines;
 };
 
@@ -44,13 +45,13 @@ private:
     void sendNewReveals(NetworkClient &client);
 public:
     Game(int rows, int cols, int numMines);
-    
+    void setExploded(int cell_x, int cell_y);
     void reset();
     int checkSurrounding(int row, int col) const;
     void revealBlanks(int row, int col);
     void revealEnemyCells(const std::vector<std::pair<int, int>>& coords);
-    void createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps &mouseProps, GameAssets &assets, Draw& draw);
-    void createEnemyGrid(SDL_Renderer *renderer, MouseProps &mouseProps, GameAssets &assets, Draw& draw, std::vector<std::pair<int, int>> coords);
+    void createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps &mouseProps, const GameAssets &assets, Draw& draw);
+    void createEnemyGrid(SDL_Renderer *renderer, MouseProps &mouseProps, const GameAssets &assets, Draw& draw, std::vector<std::pair<int, int>> coords);
     bool checkWin();
     void revealCell(int row, int col);
 };

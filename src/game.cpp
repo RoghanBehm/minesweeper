@@ -9,6 +9,7 @@ Node node {
     .hasMine = false,
     .isRevealed = false,
     .isFlagged = false,
+    .exploded = false,
     .adjacentMines = 0,
     };
 
@@ -68,6 +69,17 @@ void Game::plantMines()
             placedMines++;
         }
     }
+}
+
+void Game::setExploded(int cell_x, int cell_y) 
+{ 
+        for (size_t i = 0; i < grid.size(); i++) {
+        for (size_t j = 0; j < grid[i].size(); ++j) {
+            if (grid[i][j].exploded) {
+                return;
+            }
+        }
+    } grid[cell_x][cell_y].exploded = true;
 }
 
 int Game::checkSurrounding(int row, int col) const
@@ -257,7 +269,7 @@ void Game::sendNewReveals(NetworkClient &client)
 
 
 
-void Game::createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps &mouseProps, GameAssets &assets, Draw& draw)
+void Game::createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps &mouseProps, const GameAssets &assets, Draw& draw)
 {
     for (size_t i = 0; i < grid.size(); i++) {
         for (size_t j = 0; j < grid[i].size(); ++j) {
@@ -295,7 +307,7 @@ void Game::createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps 
 }
 
 
-void Game::createEnemyGrid(SDL_Renderer *renderer, MouseProps &mouseProps, GameAssets &assets, Draw& draw, std::vector<std::pair<int, int>> coords)
+void Game::createEnemyGrid(SDL_Renderer *renderer, MouseProps &mouseProps,const GameAssets &assets, Draw& draw, std::vector<std::pair<int, int>> coords)
 {
 
     revealEnemyCells(coords);
