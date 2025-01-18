@@ -50,7 +50,7 @@ int main() {
 
     // Initialize game objects
     while (!globalSettings.seed_received) {};
-    Game game(16, 30, 5);
+    Game game(16, 30, 100);
     Draw draw;
     GameAssets assets;
     MouseProps mouseProps;
@@ -108,6 +108,8 @@ int main() {
                 } else if (event.type == SDL_MOUSEBUTTONUP) {
                     if (event.button.button == SDL_BUTTON_RIGHT) {
                         mouseProps.rightClicked = false;
+                    } else if (globalSettings.game_over && game.popupActive) {
+                        game.popupActive = false;
                     } else {
                         SDL_GetMouseState(&mouseProps.mouseXr, &mouseProps.mouseYr);
                         mouseProps.mouseDown = false;
@@ -151,13 +153,19 @@ int main() {
         game.createEnemyGrid(renderer, mouseProps, assets, draw, all_coords);
 
         if (game.checkWin()) {
-            draw.blackFilter(renderer);
-            draw.Popup(renderer, font, "You wonnered!");
+            if (game.popupActive) {
+                draw.blackFilter(renderer);
+                draw.Popup(renderer, font, "You wonnered!");
+            }
+
         }
 
         if (globalSettings.game_over) {
-            draw.blackFilter(renderer);
-            draw.Popup(renderer, font, "You lose!");
+            if (game.popupActive) {
+                draw.blackFilter(renderer);
+                draw.Popup(renderer, font, "You lose!");
+            }
+            
         }
 
         SDL_RenderPresent(renderer);

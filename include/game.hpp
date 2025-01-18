@@ -44,6 +44,7 @@ private:
     bool isLegitEnemyCell(size_t row, size_t col);
     void sendNewReveals(NetworkClient &client);
 public:
+    bool popupActive;
     Game(int rows, int cols, int numMines);
     void setExploded(int cell_x, int cell_y);
     void reset();

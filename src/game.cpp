@@ -19,6 +19,15 @@ bool cellClicked(int x, int y, int cell_x, int cell_y)
     return (x >= cell_x && x <= cell_x + globalSettings.cell_size &&
             y >= cell_y && y <= cell_y + globalSettings.cell_size);
 }
+
+Game::Game(int rows, int cols, int numMines)
+    : rows(rows), cols(cols), numMines(numMines) {
+    initialize();
+    safeCells = rows * cols - numMines;
+    revealedCells = 0;
+    popupActive = false;
+}
+
 void Game::reset() {
 
     alreadySent_.clear();
@@ -35,12 +44,6 @@ void Game::initialize() {
 
 }
 
-Game::Game(int rows, int cols, int numMines)
-    : rows(rows), cols(cols), numMines(numMines) {
-    initialize();
-    safeCells = rows * cols - numMines;
-    revealedCells = 0;
-}
 
 void Game::clearMines()
 {
@@ -201,6 +204,7 @@ void Game::revealCell(int row, int col) {
 
         if (grid[row][col].hasMine) {
             globalSettings.game_over = true;
+            popupActive = true;
         }
     }
 }
