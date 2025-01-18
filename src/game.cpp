@@ -271,7 +271,11 @@ void Game::sendNewReveals(NetworkClient &client)
     }
 }
 
-
+void Game::sendWin(NetworkClient &client)
+{
+    auto serialized = serialize_bool(true);
+    client.send_message(serialized);
+}
 
 void Game::createGrid(SDL_Renderer *renderer, NetworkClient &client, MouseProps &mouseProps, const GameAssets &assets, Draw& draw)
 {

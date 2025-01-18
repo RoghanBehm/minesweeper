@@ -90,7 +90,7 @@ void NetworkClient::async_read()
                 // Place incoming data in persistent buffer (avoids overwrites)
                 incoming_data_.insert(incoming_data_.end(), buffer->begin(), buffer->begin() + bytes_transferred);
 
-                // Ensure we receive data == to at least the prefix length
+                // Ensure we receive data == at least the prefix length
                 while (incoming_data_.size() >= sizeof(uint32_t))
                 {
                     uint32_t body_size;
@@ -125,6 +125,9 @@ void NetworkClient::async_read()
                             for (const auto& [x, y] : coords)
                                 std::cout << "(" << x << ", " << y << ") ";
                             std::cout << std::endl;
+                        } else if (type == MessageType::Result)
+                        {
+                            game_result = deserialize_bool(message_data);
                         }
                         else
                         {
@@ -153,3 +156,7 @@ std::vector<std::pair<int,int>> NetworkClient::return_board()
     return all_coords; 
 }
 
+bool NetworkClient::return_res()
+{
+    return game_result;
+}

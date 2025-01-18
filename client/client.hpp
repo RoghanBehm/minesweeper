@@ -8,11 +8,13 @@ public:
     void send_message(const std::vector<char>& message);
     void read_seed();
     std::vector<std::pair<int,int>> return_board();
+    bool return_res();
 private:
     void async_read();
     boost::asio::ip::tcp::socket socket_;
     std::vector<std::pair<int, int>> coords;
     std::vector<std::pair<int, int>> all_coords;
     std::vector<char> incoming_data_;
+    bool game_result;
     
 };

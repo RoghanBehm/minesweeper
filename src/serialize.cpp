@@ -49,6 +49,39 @@ std::vector<std::pair<int, int>> deserialize_pairs(const std::vector<char>& buff
     return coords;
 }
 
+std::vector<char> serialize_bool(bool b)
+{
+    uint32_t body_size = sizeof(MessageType) + sizeof(uint8_t);
+
+    uint32_t total_size = sizeof(uint32_t) + body_size;
+
+    std::vector<char> buffer(total_size);
+    char* ptr = buffer.data();
+
+    std::memcpy(ptr, &body_size, sizeof(uint32_t));
+    ptr += sizeof(uint32_t);
+
+    MessageType type = MessageType::Result;
+    std::memcpy(ptr, &type, sizeof(type));
+    ptr += sizeof(type);
+
+    uint8_t bool_byte = b ? 1 : 0;
+    std::memcpy(ptr, &bool_byte, sizeof(bool_byte));
+
+    return buffer;
+}
+
+bool deserialize_bool(const std::vector<char>& buffer)
+{
+    const char* ptr = buffer.data() + sizeof(MessageType);
+
+    uint8_t bool_byte;
+    std::memcpy(&bool_byte, ptr, sizeof(bool_byte));
+
+    return (bool_byte != 0);
+}
+
+
 std::vector<char> serialize_seed(int seed)
 {
     std::vector<char> buffer(sizeof(MessageType) + sizeof(int));

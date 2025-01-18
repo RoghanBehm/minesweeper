@@ -32,7 +32,7 @@ private:
     std::vector<std::vector<Node>> enemy_grid;
     int numMines;
     int safeCells;
-    int revealedCells;
+    
     std::set<std::pair<int,int>> alreadySent_;
     std::vector<std::pair<int,int>> cascadeRevealed;
     void initialize();
@@ -45,6 +45,7 @@ private:
     void sendNewReveals(NetworkClient &client);
 public:
     bool popupActive;
+    int revealedCells;
     Game(int rows, int cols, int numMines);
     void setExploded(int cell_x, int cell_y);
     void reset();
@@ -55,6 +56,7 @@ public:
     void createEnemyGrid(SDL_Renderer *renderer, MouseProps &mouseProps, const GameAssets &assets, Draw& draw, std::vector<std::pair<int, int>> coords);
     bool checkWin();
     void revealCell(int row, int col);
+    void sendWin(NetworkClient &client);
 };
 
 

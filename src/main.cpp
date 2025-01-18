@@ -50,7 +50,7 @@ int main() {
 
     // Initialize game objects
     while (!globalSettings.seed_received) {};
-    Game game(16, 30, 100);
+    Game game(16, 30, 5);
     Draw draw;
     GameAssets assets;
     MouseProps mouseProps;
@@ -152,10 +152,19 @@ int main() {
         game.createGrid(renderer, client, mouseProps, assets, draw);
         game.createEnemyGrid(renderer, mouseProps, assets, draw, all_coords);
 
+        std::cout << game.revealedCells << "\n";
+        //Check for game over
+
+        if (client.return_res()) {
+            globalSettings.game_over = true;
+        }
+
         if (game.checkWin()) {
             if (game.popupActive) {
                 draw.blackFilter(renderer);
                 draw.Popup(renderer, font, "You wonnered!");
+
+                game.sendWin(client);
             }
 
         }
@@ -164,8 +173,7 @@ int main() {
             if (game.popupActive) {
                 draw.blackFilter(renderer);
                 draw.Popup(renderer, font, "You lose!");
-            }
-            
+            }            
         }
 
         SDL_RenderPresent(renderer);
