@@ -175,7 +175,9 @@ void Game::revealBlock(int row, int col, std::vector<std::pair<int,int>> &newRev
 
 
 bool Game::checkWin() {
-    if (safeCells == revealedCells) {
+    if (revealedCells == (rows * cols - numMines)) {
+        popupActive = true;
+        win = true;
         return true;
     }
     return false;

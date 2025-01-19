@@ -108,7 +108,7 @@ int main() {
                 } else if (event.type == SDL_MOUSEBUTTONUP) {
                     if (event.button.button == SDL_BUTTON_RIGHT) {
                         mouseProps.rightClicked = false;
-                    } else if (globalSettings.game_over && game.popupActive) {
+                    } else if (game.popupActive) {
                         game.popupActive = false;
                     } else {
                         SDL_GetMouseState(&mouseProps.mouseXr, &mouseProps.mouseYr);
@@ -155,11 +155,15 @@ int main() {
         std::cout << game.revealedCells << "\n";
         //Check for game over
 
+        if (!game.win) {
+            game.checkWin();
+        }
+
         if (client.return_res()) {
             globalSettings.game_over = true;
         }
 
-        if (game.checkWin()) {
+        if (game.win) {
             if (game.popupActive) {
                 draw.blackFilter(renderer);
                 draw.Popup(renderer, font, "You wonnered!");

@@ -46,6 +46,7 @@ private:
 public:
     bool popupActive;
     int revealedCells;
+    bool win;
     Game(int rows, int cols, int numMines);
     void setExploded(int cell_x, int cell_y);
     void reset();
