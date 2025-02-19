@@ -12,7 +12,7 @@ Settings globalSettings = {
     .first_click = true,
     .regenerate = false,
     .seed_received = false,
-    .coords_received = false
+    .coords_received = false,
 };
 
 

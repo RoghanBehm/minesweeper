@@ -183,11 +183,13 @@ void Draw::blackFilter(SDL_Renderer *renderer)
 
 
 void Draw::Popup(SDL_Renderer *renderer, TTF_Font *font, const char *message) {
+    SDL_Rect popupRect = {globalSettings.window_width / 4, globalSettings.window_height / 4, 
+                          globalSettings.window_width / 2, globalSettings.window_height / 2};
 
-    SDL_Rect popupRect = {globalSettings.window_width / 4, globalSettings.window_height / 4, globalSettings.window_width / 2, globalSettings.window_height / 2};
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderFillRect(renderer, &popupRect);
 
+    // Draw message text
     SDL_Color textColor = {0, 0, 0, 255};
     SDL_Surface *textSurface = TTF_RenderText_Solid(font, message, textColor);
     SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
@@ -195,11 +197,36 @@ void Draw::Popup(SDL_Renderer *renderer, TTF_Font *font, const char *message) {
     int textWidth = textSurface->w;
     int textHeight = textSurface->h;
     SDL_Rect textRect = {popupRect.x + (popupRect.w - textWidth) / 2, 
-                         popupRect.y + (popupRect.h - textHeight) / 2, 
+                         popupRect.y + (popupRect.h - textHeight) / 3, 
                          textWidth, textHeight};
     SDL_FreeSurface(textSurface);
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     SDL_DestroyTexture(textTexture);
+
+    // Draw OK button
+    SDL_Rect buttonRect = {popupRect.x + (popupRect.w / 2 - 50), 
+                           popupRect.y + popupRect.h - 60, 
+                           100, 40}; 
+
+    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
+    SDL_RenderFillRect(renderer, &buttonRect);
+
+    // Draw OK text
+    SDL_Surface *buttonSurface = TTF_RenderText_Solid(font, "OK", textColor);
+    SDL_Texture *buttonTexture = SDL_CreateTextureFromSurface(renderer, buttonSurface);
+
+    int buttonTextWidth = buttonSurface->w;
+    int buttonTextHeight = buttonSurface->h;
+    SDL_Rect buttonTextRect = {buttonRect.x + (buttonRect.w - buttonTextWidth) / 2, 
+                               buttonRect.y + (buttonRect.h - buttonTextHeight) / 2, 
+                               buttonTextWidth, buttonTextHeight};
+    SDL_FreeSurface(buttonSurface);
+    SDL_RenderCopy(renderer, buttonTexture, NULL, &buttonTextRect);
+    SDL_DestroyTexture(buttonTexture);
+
+    // Store the button's rect so that we can check clicks in the main event loop
+    okButtonRect = buttonRect;
 }
+
 
 

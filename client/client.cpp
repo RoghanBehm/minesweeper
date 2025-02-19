@@ -129,6 +129,11 @@ void NetworkClient::async_read()
                         {
                             game_result = deserialize_bool(message_data);
                         }
+                        else if (type == MessageType::Seed)
+                        {
+                            read_seed();
+                            globalSettings.regenerate = true;
+                        }
                         else
                         {
                             std::cerr << "Unknown message type\n";

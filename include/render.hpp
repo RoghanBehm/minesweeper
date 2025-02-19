@@ -19,6 +19,7 @@ private:
     
 
 public:
+    SDL_Rect okButtonRect;
     void cell(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released, Node &cell, Game &game, const GameAssets &assets, int nearbyMines, int row, int col);
     void menu(SDL_Renderer *renderer, int x, int y, bool &clicked, bool &released);
     void blackFilter(SDL_Renderer *renderer);

@@ -50,7 +50,7 @@ int main() {
 
     // Initialize game objects
     while (!globalSettings.seed_received) {};
-    Game game(16, 30, 5);
+    Game game(16, 30, 100);
     Draw draw;
     GameAssets assets;
     MouseProps mouseProps;
@@ -109,7 +109,15 @@ int main() {
                     if (event.button.button == SDL_BUTTON_RIGHT) {
                         mouseProps.rightClicked = false;
                     } else if (game.popupActive) {
-                        game.popupActive = false;
+                        int mouseX, mouseY;
+                        SDL_GetMouseState(&mouseX, &mouseY);
+
+                        // Check if OK button is clicked
+                        SDL_Rect okButton = draw.okButtonRect;
+                        if (mouseX >= okButton.x && mouseX <= okButton.x + okButton.w &&
+                            mouseY >= okButton.y && mouseY <= okButton.y + okButton.h) {
+                            game.popupActive = false;
+        }
                     } else {
                         SDL_GetMouseState(&mouseProps.mouseXr, &mouseProps.mouseYr);
                         mouseProps.mouseDown = false;

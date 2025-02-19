@@ -61,7 +61,7 @@ public:
     {
         start_accept();
     }
-
+    void broadcast_new_seed();
     void broadcast_message(const std::vector<char>& message, std::shared_ptr<tcp_connection> sender)
     {
         for (auto& client : clients_)
@@ -113,39 +113,69 @@ private:
 void tcp_connection::do_read()
 {
     auto message = std::make_shared<std::vector<char>>(128);
-
     auto self = shared_from_this();
-socket_.async_read_some(
-    boost::asio::buffer(*message),
-    [this, self, message](const boost::system::error_code& error, std::size_t bytes_transferred)
-    {
-        if (!error)
-        {
-            message->resize(bytes_transferred);
 
-            auto deserialized_coords = deserialize_pairs(*message);
-            if (!deserialized_coords.empty())
+    socket_.async_read_some(
+        boost::asio::buffer(*message),
+        [this, self, message](const boost::system::error_code& error, std::size_t bytes_transferred)
+        {
+            if (!error)
             {
-                std::cout << "Received coordinates: ";
-                for (auto& [x, y] : deserialized_coords)
-                    std::cout << "(" << x << ", " << y << ") ";
-                std::cout << std::endl;
+                message->resize(bytes_transferred);
 
-                server_.broadcast_message(*message, self);
+                MessageType type;
+                std::memcpy(&type, message->data() + sizeof(uint32_t), sizeof(MessageType));
+
+                std::cout << "Received MessageType: " << static_cast<int>(type) << std::endl;
+
+                if (type == MessageType::Coordinates)
+                {
+                    auto deserialized_coords = deserialize_pairs(
+                        std::vector<char>(message->begin() + sizeof(uint32_t) + sizeof(MessageType), message->end())
+                    );
+
+                    if (!deserialized_coords.empty())
+                    {
+                        std::cout << "Received coordinates: ";
+                        for (auto& [x, y] : deserialized_coords)
+                            std::cout << "(" << x << ", " << y << ") ";
+                        std::cout << std::endl;
+
+                        server_.broadcast_message(*message, self);
+                    }
+                }
+                else if (type == MessageType::Rematch)
+                {
+                    std::cout << "Rematch requested. Broadcasting new seed." << std::endl;
+                    server_.broadcast_new_seed();
+                }
+                else
+                {
+                    std::cerr << "Unknown message type received: " << static_cast<int>(type) << std::endl;
+                }
+
+                do_read();
             }
-
-            do_read(); // keep reading
-        }
-        else
-        {
-            std::cout << "Client disconnected." << std::endl;
-            server_.remove_client(self);
-        }
-    }
-);
-
+            else
+            {
+                std::cout << "Client disconnected." << std::endl;
+                server_.remove_client(self);
+            }
+        });
 }
 
+void tcp_server::broadcast_new_seed()
+{
+    seed_ = std::time(nullptr);
+    std::vector<char> serialized_seed = serialize_seed(seed_);
+
+    for (auto& client : clients_)
+    {
+        client->send_message(serialized_seed);
+    }
+
+    std::cout << "Broadcasted new seed: " << seed_ << std::endl;
+}
 
 
 

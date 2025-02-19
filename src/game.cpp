@@ -31,6 +31,11 @@ Game::Game(int rows, int cols, int numMines)
 void Game::reset() {
 
     alreadySent_.clear();
+    revealedCells = 0;
+    win = false;
+    popupActive = false;
+    safeCells = rows * cols - numMines;
+    
     initialize();
 
 }
@@ -175,7 +180,7 @@ void Game::revealBlock(int row, int col, std::vector<std::pair<int,int>> &newRev
 
 
 bool Game::checkWin() {
-    if (revealedCells == (rows * cols - numMines)) {
+    if (revealedCells >= safeCells) {
         popupActive = true;
         win = true;
         return true;
