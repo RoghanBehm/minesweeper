@@ -167,21 +167,25 @@ int main() {
             game.checkWin();
         }
 
-        if (client.return_res()) {
-            globalSettings.game_over = true;
+        if (client.return_res() && !game.resultReturned) {
+            game.lose = true;
+            game.popupActive = true;
+            game.resultReturned = true;
         }
 
         if (game.win) {
             if (game.popupActive) {
                 draw.blackFilter(renderer);
                 draw.Popup(renderer, font, "You wonnered!");
-
-                game.sendWin(client);
+                if (!game.winSent) {
+                    game.sendWin(client);
+                    game.winSent = true;
+                }
             }
 
         }
 
-        if (globalSettings.game_over) {
+        if (game.lose || globalSettings.game_over) {
             if (game.popupActive) {
                 draw.blackFilter(renderer);
                 draw.Popup(renderer, font, "You lose!");

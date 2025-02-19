@@ -224,7 +224,6 @@ void Draw::Popup(SDL_Renderer *renderer, TTF_Font *font, const char *message) {
     SDL_RenderCopy(renderer, buttonTexture, NULL, &buttonTextRect);
     SDL_DestroyTexture(buttonTexture);
 
-    // Store the button's rect so that we can check clicks in the main event loop
     okButtonRect = buttonRect;
 }
 

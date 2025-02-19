@@ -33,9 +33,12 @@ void Game::reset() {
     alreadySent_.clear();
     revealedCells = 0;
     win = false;
+    lose = false;
     popupActive = false;
     safeCells = rows * cols - numMines;
-    
+    resultReturned = false;
+    winSent = false;
+
     initialize();
 
 }
